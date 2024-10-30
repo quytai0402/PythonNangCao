@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Quản lý tài chính cá nhân</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styleindex.css') }}">
+
+    
+</head>
+<body>
+    <!-- Navbar -->
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg fixed-top">
+    <a class="navbar-brand" href="/dashboard">Quản lý tài chính cá nhân</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="/">Xem giao dịch</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/add">Thêm giao dịch</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/report">Báo cáo tài chính</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/analysis">Phân tích</a>
+            </li>
+        </ul>
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" href="/profile">Hồ sơ</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/logout">Đăng xuất</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+    <!-- Content -->
+    <div class="container mt-4">
+        <h1 class="text-center mb-4">Giao dịch gần đây</h1>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <div class="text-center mb-3">
+            <button id="income-btn" class="btn btn-success btn-custom">Thu Nhập</button>
+            <button id="expense-btn" class="btn btn-danger btn-custom">Chi Tiêu</button>
+            <button id="all-btn" class="btn btn-secondary btn-custom">Tất cả</button>
+        </div>
+
+        <table class="table table-hover">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Loại</th>
+                    <th>Danh mục</th>
+                    <th>Số tiền</th>
+                    <th>Ngày</th>
+                    <th>Mô tả</th>
+                    <th>Hành động</th>
+                </tr>
+            </thead>
+            <tbody id="transaction-table-body">
+                {% for transaction in transactions %}
+                <tr class="{{ 'table-success' if transaction.type == 'Thu Nhập' else 'table-danger' }}">
+                    <td>{{ transaction.type }}</td>
+                    <td>{{ transaction.category }}</td>
+                    <td>{{ transaction.amount | vnd_currency }}</td>
+                    <td>{{ transaction.date.strftime('%Y-%m-%d') }}</td> 
+                    <td>{{ transaction.description }}</td>
+                    <td>
+                        <a href="{{ url_for('edit_transaction', transaction_id=transaction.id) }}" class="btn btn-primary btn-sm">Sửa</a>
+                        <a href="{{ url_for('delete_transaction', transaction_id=transaction.id) }}" 
+                           class="btn btn-danger btn-sm" 
+                           onclick="return confirm('Bạn có chắc chắn muốn xóa?')">Xóa</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+    <script>
+        $(document).ready(function(){
+            $("#income-btn").click(function(){
+                $("#transaction-table-body tr").hide();
+                $("#transaction-table-body tr.table-success").show();
+            });
+
+            $("#expense-btn").click(function(){
+                $("#transaction-table-body tr").hide();
+                $("#transaction-table-body tr.table-danger").show();
+            });
+
+            $("#all-btn").click(function(){
+                $("#transaction-table-body tr").show();
+            });
+        });
+    </script>
+</body>
+</html>

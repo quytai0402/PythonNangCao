@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark">
+        <a class="navbar-brand" href="/dashboard">Quản lý tài chính cá nhân</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/">Xem giao dịch</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/add">Thêm giao dịch</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/report">Báo cáo tài chính</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/analysis">Phân tích</a>
+                </li>
+
+            </ul>
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="/profile">Hồ sơ</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/logout">Đăng xuất</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Content -->
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">Tổng Quan</h1>
+        <div class="row">
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        Biểu đồ chi tiêu
+                    </div>
+                    <div class="card-body">
+                        <canvas id="expenseChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        Biểu đồ thu nhập
+                    </div>
+                    <div class="card-body">
+                        <canvas id="incomeChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        Giao dịch gần đây
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Ngày</th>
+                                    <th>Loại</th>
+                                    <th>Số tiền</th>
+                                    <th>Mô tả</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Thêm các giao dịch gần đây tại đây -->
+                                <tr>
+                                    <td>01/01/2023</td>
+                                    <td>Chi tiêu</td>
+                                    <td>-500,000 VND</td>
+                                    <td>Mua sắm</td>
+                                </tr>
+                                <tr>
+                                    <td>02/01/2023</td>
+                                    <td>Thu nhập</td>
+                                    <td>10,000,000 VND</td>
+                                    <td>Lương</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Biểu đồ chi tiêu
+        var ctxExpense = document.getElementById('expenseChart').getContext('2d');
+        var expenseChart = new Chart(ctxExpense, {
+            type: 'pie',
+            data: {
+                labels: ['Mua sắm', 'Ăn uống', 'Giải trí', 'Khác'],
+                datasets: [{
+                    data: [500000, 300000, 200000, 100000],
+                    backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0']
+                }]
+            },
+            options: {
+                title: {
+                    display: true,
+                    text: 'Chi tiêu'
+                }
+            }
+        });
+
+        // Biểu đồ thu nhập
+        var ctxIncome = document.getElementById('incomeChart').getContext('2d');
+        var incomeChart = new Chart(ctxIncome, {
+            type: 'pie',
+            data: {
+                labels: ['Lương', 'Đầu tư', 'Khác'],
+                datasets: [{
+                    data: [10000000, 2000000, 1000000],
+                    backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56']
+                }]
+            },
+            options: {
+                title: {
+                    display: true,
+                    text: 'Thu nhập'
+                }
+            }
+        });
+    </script>
+</body>
+</html>

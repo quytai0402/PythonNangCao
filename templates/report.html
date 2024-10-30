@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Báo cáo tài chính</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/stylereport.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+   <!-- Navbar -->
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg fixed-top">
+    <a class="navbar-brand" href="/dashboard">Quản lý tài chính cá nhân</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="/">Xem giao dịch</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/add">Thêm giao dịch</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/report">Báo cáo tài chính</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/analysis">Phân tích</a>
+            </li>
+        </ul>
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" href="/profile">Hồ sơ</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/logout">Đăng xuất</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+    <!-- Content -->
+    <div class="container mt-4">
+        <h2 class="text-center mb-4">Báo cáo tài chính</h2>
+
+        <!-- Hiển thị thông báo -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+          <ul class="flashes">
+            {% for message in messages %}
+            <li>{{ message }}</li>
+            {% endfor %}
+          </ul>
+          {% endif %}
+        {% endwith %}
+
+        <form method="post">
+            <div class="form-row">
+                <div class="col-md-6 mb-3">
+                    <label for="start_date">Từ ngày</label>
+                    <input type="date" name="start_date" id="start_date" value="{{ start_date }}" class="form-control">
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="end_date">Đến ngày:</label>
+                    <input type="date" name="end_date" id="end_date" value="{{ end_date }}" class="form-control">
+                </div>
+                <div class="col-md-12 mb-3 text-right">
+                    <button type="submit" class="btn btn-primary">Lọc</button>
+                </div>
+            </div>
+        </form>
+
+        <table class="table table-bordered">
+            <thead class="thead-light">
+                <tr>
+                    <th scope="col">Loại</th>
+                    <th scope="col">Danh mục</th>
+                    <th scope="col">Số tiền</th>
+                    <th scope="col">Ngày</th>
+                    <th scope="col">Mô tả</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for transaction in transactions %}
+                <tr>
+                    <td>{{ transaction.type }}</td>
+                    <td>{{ transaction.category }}</td>
+                    <td>{{ transaction.amount | vnd_currency }}</td>
+                    <td>{{ transaction.date.strftime('%Y-%m-%d') }}</td>
+                    <td>{{ transaction.description }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="summary">
+            <h3>Tổng thu nhập: <span>{{ total_income | vnd_currency }}</span></h3>
+            <h3>Tổng chi tiêu: <span>{{ total_expense | vnd_currency }}</span></h3>
+            <h3>Số dư: <span>{{ balance | vnd_currency }}</span></h3>
+        </div>
+
+        <!-- Form Xuất Báo Cáo -->
+        {% if show_export_button %}
+        <form method="GET" action="{{ url_for('export_report') }}" id="export-form">
+            <input type="hidden" name="start_date" value="{{ start_date }}">
+            <input type="hidden" name="end_date" value="{{ end_date }}">
+            <button type="button" id="exportButton" class="btn btn-secondary">Xuất Báo Cáo</button>
+        </form>
+        {% endif %}
+
+        <!-- Hiển thị thông báo tải xuống -->
+        <div id="notification"></div>
+
+        <!-- Canvas for Chart.js -->
+        <div class="chart-container mt-4">
+            <canvas id="expenseChart"></canvas>
+        </div>
+
+        <script>
+            $(document).ready(function() {
+                $('#exportButton').click(function() {
+                    const startDate = $('#start_date').val();
+                    const endDate = $('#end_date').val();
+
+                    $.ajax({
+                        url: `/export_report?start_date=${startDate}&end_date=${endDate}`,
+                        type: 'GET',
+                        success: function(response) {
+                            // Tải xuống tệp
+                            window.location.href = response.file_url;
+                            // Hiển thị thông báo
+                            $('#notification').text(response.message).css('color', 'green');
+                        },
+                        error: function(xhr) {
+                            $('#notification').text(xhr.responseJSON.message).css('color', 'red');
+                        }
+                    });
+                });
+            });
+
+            const transactions = {{ transactions_json | safe }};
+            const categories = {
+                "Chi Tiêu": {},
+                "Thu Nhập": {}
+            };
+
+            // Duyệt qua từng giao dịch để phân loại
+            transactions.forEach(transaction => {
+                if (transaction.type === 'Chi Tiêu') {
+                    if (!categories["Chi Tiêu"][transaction.category]) {
+                        categories["Chi Tiêu"][transaction.category] = 0;
+                    }
+                    categories["Chi Tiêu"][transaction.category] += transaction.amount;
+                } else if (transaction.type === 'Thu Nhập') {
+                    if (!categories["Thu Nhập"][transaction.category]) {
+                        categories["Thu Nhập"][transaction.category] = 0;
+                    }
+                    categories["Thu Nhập"][transaction.category] += transaction.amount;
+                }
+            });
+
+            // Tạo dữ liệu cho biểu đồ
+            const labels = Object.keys(categories["Chi Tiêu"]).concat(Object.keys(categories["Thu Nhập"]));
+            const chartData = {
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Chi Tiêu',
+                        data: labels.map(label => categories["Chi Tiêu"][label] || 0),
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 1,
+                        categoryPercentage: 0.5,
+                        barPercentage: 0.5
+                    },
+                    {
+                        label: 'Thu Nhập',
+                        data: labels.map(label => categories["Thu Nhập"][label] || 0),
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1,
+                        categoryPercentage: 0.5,
+                        barPercentage: 0.5
+                    }
+                ]
+            };
+
+            const ctx = document.getElementById('expenseChart').getContext('2d');
+            const expenseChart = new Chart(ctx, {
+                type: 'bar',
+                data: chartData,
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: {
+                            stacked: false,
+                        },
+                        y: {
+                            beginAtZero: true
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        title: {
+                            display: true,
+                            text: 'Biểu đồ thu nhập và chi tiêu'
+                        }
+                    }
+                }
+            });
+        </script>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>

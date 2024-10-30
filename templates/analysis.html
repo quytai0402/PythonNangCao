@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Phân tích và Dự báo</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styleanalysis.css') }}">
+    <style>
+        .analysis-table th, .analysis-table td {
+            text-align: center;
+            vertical-align: middle;
+        }
+        .analysis-table th {
+            background-color: #f8f9fa;
+        }
+        .analysis-table tbody tr:nth-child(odd) {
+            background-color: #f2f2f2;
+        }
+        .analysis-table tbody tr:hover {
+            background-color: #e9ecef;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <a class="navbar-brand" href="/dashboard">Quản lý tài chính cá nhân</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/">Xem giao dịch</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/add">Thêm giao dịch</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/report">Báo cáo tài chính</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/analysis">Phân tích</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="/profile">Hồ sơ</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/logout">Đăng xuất</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div class="container mt-4">
+        <h1 class="text-center mb-4">Phân tích Chi Tiêu và Thu Nhập hàng tháng</h1>
+        <!-- Thêm bộ lọc tháng -->
+        <div class="form-group">
+            <label for="monthSelect">Chọn tháng:</label>
+            <select id="monthSelect" class="form-control">
+                <option value="">Tất cả</option>
+                <option value="1" {% if selected_month == '1' %}selected{% endif %}>Tháng 1</option>
+                <option value="2" {% if selected_month == '2' %}selected{% endif %}>Tháng 2</option>
+                <option value="3" {% if selected_month == '3' %}selected{% endif %}>Tháng 3</option>
+                <option value="4" {% if selected_month == '4' %}selected{% endif %}>Tháng 4</option>
+                <option value="5" {% if selected_month == '5' %}selected{% endif %}>Tháng 5</option>
+                <option value="6" {% if selected_month == '6' %}selected{% endif %}>Tháng 6</option>
+                <option value="7" {% if selected_month == '7' %}selected{% endif %}>Tháng 7</option>
+                <option value="8" {% if selected_month == '8' %}selected{% endif %}>Tháng 8</option>
+                <option value="9" {% if selected_month == '9' %}selected{% endif %}>Tháng 9</option>
+                <option value="10" {% if selected_month == '10' %}selected{% endif %}>Tháng 10</option>
+                <option value="11" {% if selected_month == '11' %}selected{% endif %}>Tháng 11</option>
+                <option value="12" {% if selected_month == '12' %}selected{% endif %}>Tháng 12</option>
+            </select>
+        </div>
+
+        <canvas id="analysisChart"></canvas>
+
+        {% if analysis_dict|length == 0 %}
+            <h2 class="mt-4 text-center">Không có dữ liệu cho tháng đã chọn</h2>
+        {% else %}
+            <!-- Hiển thị kết quả phân tích Thu Nhập -->
+            <h2 class="mt-4">Kết quả phân tích Thu Nhập</h2>
+            <table class="table table-bordered analysis-table">
+                <thead>
+                    <tr>
+                        <th>Tháng</th>
+                        <th>Tổng Thu Nhập</th>
+                        <th>Thu Nhập Trung Bình</th>
+                        <th>Thu Nhập Cao Nhất</th>
+                        <th>Thu Nhập Thấp Nhất</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in analysis_dict %}
+                        <tr>
+                            <td>{{ row['Tháng'] }}</td>
+                            <td>{{ row['Tổng Thu Nhập'] | vnd_currency }}</td>
+                            <td>{{ row['Thu Nhập Trung Bình'] | vnd_currency }}</td>
+                            <td>{{ row['Thu Nhập Cao Nhất'] | vnd_currency }}</td>
+                            <td>{{ row['Thu Nhập Thấp Nhất'] | vnd_currency }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <!-- Hiển thị kết quả phân tích Chi Tiêu -->
+            <h2 class="mt-4">Kết quả phân tích Chi Tiêu</h2>
+            <table class="table table-bordered analysis-table">
+                <thead>
+                    <tr>
+                        <th>Tháng</th>
+                        <th>Tổng Chi Tiêu</th>
+                        <th>Chi Tiêu Trung Bình</th>
+                        <th>Chi Tiêu Cao Nhất</th>
+                        <th>Chi Tiêu Thấp Nhất</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in analysis_dict %}
+                        <tr>
+                            <td>{{ row['Tháng'] }}</td>
+                            <td>{{ row['Tổng Chi Tiêu'] | vnd_currency }}</td>
+                            <td>{{ row['Chi Tiêu Trung Bình'] | vnd_currency }}</td>
+                            <td>{{ row['Chi Tiêu Cao Nhất'] | vnd_currency }}</td>
+                            <td>{{ row['Chi Tiêu Thấp Nhất'] | vnd_currency }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+    </div>
+
+    <script>
+        document.getElementById('monthSelect').addEventListener('change', function() {
+            const selectedMonth = this.value;
+            window.location.href = `/analysis?month=${selectedMonth}`;
+        });
+
+        const expenseData = JSON.parse('{{ expense_data|tojson|safe }}');
+        const incomeData = JSON.parse('{{ income_data|tojson|safe }}');
+        const ctx = document.getElementById('analysisChart').getContext('2d');
+        
+        if (Object.keys(expenseData).length === 0 && Object.keys(incomeData).length === 0) {
+            ctx.font = "20px Arial";
+            ctx.fillText("Không có dữ liệu cho tháng đã chọn", 50, 50);
+        } else {
+            const labels = Array.from(new Set([...Object.keys(expenseData), ...Object.keys(incomeData)])).sort();
+            const expenseValues = labels.map(date => expenseData[date] || 0);
+            const incomeValues = labels.map(date => incomeData[date] || 0);
+
+            const analysisChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels.map(date => {
+                        const d = new Date(date);
+                        return `${d.getDate()}/${d.getMonth() + 1}/${d.getFullYear()}`;
+                    }),
+                    datasets: [
+                        {
+                            label: 'Chi tiêu hàng ngày',
+                            data: expenseValues,
+                            borderColor: 'rgba(255, 99, 132, 1)',  // Màu đỏ cho chi tiêu
+                            borderWidth: 1,
+                            fill: false
+                        },
+                        {
+                            label: 'Thu nhập hàng ngày',
+                            data: incomeValues,
+                            borderColor: 'rgba(54, 162, 235, 1)',  // Màu xanh cho thu nhập
+                            borderWidth: 1,
+                            fill: false
+                        }
+                    ]
+                },
+                options: {
+                    scales: {
+                        xAxes: [{
+                            type: 'time',
+                            time: {
+                                unit: 'day',
+                                tooltipFormat: 'DD/MM/YYYY',
+                                displayFormats: {
+                                    day: 'DD/MM/YYYY'
+                                }
+                            },
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Ngày'
+                            }
+                        }],
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true,
+                                callback: function(value) {
+                                    return value + ' VNĐ'; // Định dạng hiển thị tiền tệ
+                                }
+                            },
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Số tiền'
+                            }
+                        }]
+                    },
+                    tooltips: {
+                        callbacks: {
+                            label: function(tooltipItem) {
+                                return `${tooltipItem.yLabel} VNĐ`; // Hiển thị số tiền với đơn vị
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>

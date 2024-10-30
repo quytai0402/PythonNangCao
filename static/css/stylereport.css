@@ -1,0 +1,197 @@
+.navbar {
+    background: linear-gradient(90deg, rgba(255,0,150,1) 0%, rgba(0,204,255,1) 100%); /* Màu nền của navbar */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Đổ bóng cho navbar */
+}
+
+.navbar-brand {
+    font-weight: bold; /* Độ đậm của tên thương hiệu */
+    color: #fff !important; /* Màu chữ trắng cho tên thương hiệu */
+}
+
+.navbar-nav .nav-link {
+    color: #fff !important; /* Màu chữ trắng cho các liên kết trong navbar */
+    font-weight: bold; /* Độ đậm cho các liên kết */
+    transition: color 0.3s; /* Hiệu ứng chuyển màu khi hover */
+}
+
+.navbar-nav .nav-link:hover {
+    color: #ffeb3b !important; /* Màu chữ khi hover */
+}
+
+.navbar-toggler {
+    border-color: rgba(255, 255, 255, 0.1); /* Màu viền cho nút toggle */
+}
+
+.navbar-toggler-icon {
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba%28255, 255, 255, 0.5%29' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E"); /* Hình ảnh cho nút toggle */
+}
+
+/* Body Styles */
+body {
+    background-color: #f7f9fc; /* Nền xám nhạt cho nền trang */
+    padding-top: 80px; /* Padding trên để dành cho navbar cố định */
+}
+
+/* Container Styles */
+.container {
+    max-width: 900px; /* Đặt giới hạn chiều rộng cho container */
+    background-color: #ffffff; /* Nền trắng cho báo cáo */
+    border-radius: 10px; /* Bo góc cho container */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Đổ bóng nhẹ cho chiều sâu */
+    padding: 30px; /* Padding bên trong container */
+    margin: auto; /* Căn giữa container */
+}
+
+/* Title Styles */
+h2 {
+    text-align: center; /* Canh giữa tiêu đề */
+    margin-bottom: 20px; /* Khoảng cách dưới tiêu đề */
+    color: #333; /* Màu chữ tối cho tiêu đề */
+}
+
+/* Filter Form Styles */
+.filter-form {
+    display: flex; /* Sử dụng Flexbox để căn chỉnh */
+    justify-content: space-between; /* Khoảng cách giữa các phần tử */
+    margin-bottom: 20px; /* Khoảng cách dưới form lọc */
+}
+
+/* Input and Select Styles */
+input[type="date"],
+select {
+    padding: 10px; /* Padding bên trong input và select */
+    border: 1px solid #ced4da; /* Viền xám nhạt */
+    border-radius: 5px; /* Bo góc */
+    margin-right: 10px; /* Khoảng cách giữa các input */
+    flex: 1; /* Cho phép các phần tử linh hoạt chiếm không gian */
+}
+
+/* Button Styles */
+button {
+    padding: 10px 15px; /* Padding cho nút */
+    border: none; /* Xóa viền mặc định */
+    border-radius: 5px; /* Bo góc cho nút */
+    background-color: #007bff; /* Màu nền cho nút chính */
+    color: white; /* Màu chữ trắng */
+    cursor: pointer; /* Hiển thị con trỏ khi hover */
+    transition: background-color 0.3s; /* Hiệu ứng chuyển màu mượt mà */
+}
+
+button:hover {
+    background-color: #0056b3; /* Màu xanh đậm hơn khi hover */
+}
+
+/* Transaction Table Styles */
+table {
+    width: 100%; /* Chiều rộng đầy đủ của container */
+    margin-top: 20px; /* Khoảng cách trên bảng */
+    border-collapse: collapse; /* Loại bỏ khoảng cách giữa các đường biên */
+}
+
+table th {
+    background-color: #007bff; /* Màu nền cho tiêu đề bảng */
+    color: white; /* Màu chữ trắng cho tiêu đề */
+    padding: 12px; /* Padding cho ô tiêu đề */
+}
+
+table td {
+    padding: 10px; /* Padding cho ô dữ liệu */
+    border: 1px solid #dee2e6; /* Viền xám nhạt cho các ô */
+}
+
+/* Row hover effect */
+table tbody tr:hover {
+    background-color: #f1f1f1; /* Nền xám nhạt khi hover lên hàng */
+}
+
+/* Summary Section Styles */
+.summary {
+    margin-top: 30px; /* Khoảng cách trên phần tóm tắt */
+}
+
+.summary div {
+    margin-bottom: 10px; /* Khoảng cách giữa các mục tóm tắt */
+    font-weight: bold; /* Chữ đậm cho các mục tóm tắt */
+}
+
+/* Responsive Design */
+@media (max-width: 576px) {
+    .filter-form {
+        flex-direction: column; /* Xếp chồng các phần tử lọc trên màn hình nhỏ */
+    }
+
+    .filter-form input[type="date"],
+    .filter-form select {
+        margin-bottom: 10px; /* Khoảng cách dưới các input */
+        margin-right: 0; /* Xóa khoảng cách bên phải */
+    }
+
+    button {
+        width: 100%; /* Đầy đủ chiều rộng cho các nút trên màn hình nhỏ */
+    }
+}
+
+/* Đặt khoảng cách giữa các phần tử */
+.container {
+    margin-top: 60px; /* Khoảng cách trên cho container */
+}
+
+/* Đặt màu nền và khoảng cách cho các thông báo */
+.alert-container {
+    margin-bottom: 20px; /* Khoảng cách dưới cho container thông báo */
+}
+
+/* Đặt kiểu cho bảng */
+.table {
+    margin-top: 20px; /* Khoảng cách phía trên cho bảng */
+    background-color: #fff; /* Màu nền trắng cho bảng */
+    border-radius: 5px; /* Bo góc cho bảng */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Đổ bóng cho bảng */
+}
+
+/* Đặt kiểu cho các tiêu đề */
+h2 {
+    font-size: 2rem; /* Kích thước phông chữ cho tiêu đề */
+    font-weight: bold; /* Chữ đậm cho tiêu đề */
+    color: #333; /* Màu chữ tối cho tiêu đề */
+}
+
+/* Đặt kiểu cho các nút */
+.btn-primary {
+    background-color: #007bff; /* Màu nền cho nút chính */
+    border-color: #007bff; /* Màu viền cho nút chính */
+}
+
+.btn-primary:hover {
+    background-color: #0056b3; /* Màu nền tối hơn khi hover */
+    border-color: #004085; /* Màu viền tối hơn khi hover */
+}
+
+.btn-secondary {
+    background-color: #6c757d; /* Màu nền cho nút phụ */
+    border-color: #6c757d; /* Màu viền cho nút phụ */
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268; /* Màu nền tối hơn khi hover */
+    border-color: #545b62; /* Màu viền tối hơn khi hover */
+}
+
+/* Đặt kiểu cho phần tóm tắt */
+.summary {
+    margin-top: 20px; /* Khoảng cách trên cho phần tóm tắt */
+    padding: 20px; /* Padding cho phần tóm tắt */
+    background-color: #f8f9fa; /* Nền xám nhạt cho phần tóm tắt */
+    border-radius: 5px; /* Bo góc cho phần tóm tắt */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Đổ bóng cho phần tóm tắt */
+}
+
+.summary h3 {
+    font-size: 1.5rem; /* Kích thước phông chữ cho tiêu đề tóm tắt */
+    color: #333; /* Màu chữ tối cho tiêu đề tóm tắt */
+}
+
+/* Đặt kiểu cho nút tải về */
+.download-btn {
+    margin-top: -10px; /* Điều chỉnh giá trị này để di chuyển nút lên trên */
+}

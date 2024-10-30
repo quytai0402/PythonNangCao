@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Đăng ký</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <!-- Content -->
+    <div class="container mt-4">
+        <h1 class="text-center mb-4">Đăng ký</h1>
+        
+        <!-- Hiển thị thông báo flash -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <form method="POST" action="/signup" onsubmit="return validateForm()">
+            {{ form.hidden_tag() }}
+            <div class="form-group">
+                {{ form.first_name.label(class="form-label") }}
+                {{ form.first_name(class="form-control") }}
+                <div class="invalid-feedback" id="first_name_error">Họ chỉ được chứa các chữ cái và khoảng trắng.</div>
+            </div>
+            <div class="form-group">
+                {{ form.last_name.label(class="form-label") }}
+                {{ form.last_name(class="form-control") }}
+                <div class="invalid-feedback" id="last_name_error">Tên chỉ được chứa các chữ cái và khoảng trắng.</div>
+            </div>
+            <div class="form-group">
+                {{ form.email.label(class="form-label") }}
+                {{ form.email(class="form-control") }}
+                <div class="invalid-feedback" id="email_error">Email phải chứa @ và .com.</div>
+            </div>
+            <div class="form-group">
+                {{ form.username.label(class="form-label") }}
+                {{ form.username(class="form-control") }}
+            </div>
+            <div class="form-group">
+                {{ form.password.label(class="form-label") }}
+                {{ form.password(class="form-control") }}
+            </div>
+            <div class="form-group">
+                {{ form.confirm_password.label(class="form-label") }}
+                {{ form.confirm_password(class="form-control") }}
+            </div>
+            <button type="submit" class="btn btn-primary">Đăng ký</button>
+        </form>
+        
+        <!-- Thêm liên kết đăng nhập -->
+        <div class="text-center mt-3">
+            <p>Đã có tài khoản? <a href="{{ url_for('login') }}">Đăng nhập</a></p>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script>
+        function validateForm() {
+            let isValid = true;
+
+            // Validate first name
+            const firstName = document.querySelector('input[name="first_name"]');
+            const firstNameError = document.getElementById('first_name_error');
+            if (!/^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểễệỉịọỏốồổỗộớờởỡợụủứừửữựỳỵỷỹ\s]+$/.test(firstName.value.trim())) {
+                firstName.classList.add('is-invalid');
+                firstNameError.style.display = 'block';
+                isValid = false;
+            } else {
+                firstName.classList.remove('is-invalid');
+                firstNameError.style.display = 'none';
+            }
+
+            // Validate last name
+            const lastName = document.querySelector('input[name="last_name"]');
+            const lastNameError = document.getElementById('last_name_error');
+            if (!/^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểễệỉịọỏốồổỗộớờởỡợụủứừửữựỳỵỷỹ\s]+$/.test(lastName.value.trim())) {
+                lastName.classList.add('is-invalid');
+                lastNameError.style.display = 'block';
+                isValid = false;
+            } else {
+                lastName.classList.remove('is-invalid');
+                lastNameError.style.display = 'none';
+            }
+
+            // Validate email
+            const email = document.querySelector('input[name="email"]');
+            const emailError = document.getElementById('email_error');
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim())) {
+                email.classList.add('is-invalid');
+                emailError.style.display = 'block';
+                isValid = false;
+            } else {
+                email.classList.remove('is-invalid');
+                emailError.style.display = 'none';
+            }
+
+            return isValid;
+        }
+    </script>
+</body>
+</html>

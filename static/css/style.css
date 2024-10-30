@@ -1,0 +1,135 @@
+/* Navbar Styles */
+.navbar {
+    background: linear-gradient(90deg, rgba(255,0,150,1) 0%, rgba(0,204,255,1) 100%);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-brand {
+    font-weight: bold;
+    color: #fff !important;
+}
+
+.navbar-nav .nav-link {
+    color: #fff !important;
+    font-weight: bold;
+    transition: color 0.3s;
+}
+
+.navbar-nav .nav-link:hover {
+    color: #ffeb3b !important;
+}
+
+.navbar-toggler {
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.navbar-toggler-icon {
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba%28255, 255, 255, 0.5%29' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+}
+
+/* Body Styles */
+body {
+    padding-top: 80px; /* Padding to account for fixed navbar */
+    background-color: #f8f9fa;
+}
+
+/* Container Styles */
+.container {
+    max-width: 900px;
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    margin: auto;
+}
+
+/* Button Styles */
+.btn-primary {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: white;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+/* Table Styles */
+.table-hover tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+.table-success {
+    background-color: #d4edda !important;
+}
+
+.table-danger {
+    background-color: #f8d7da !important;
+}
+
+/* Form Styles */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-control {
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.form-icon {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #007bff;
+}
+
+.form-group.position-relative {
+    position: relative;
+}
+
+/* Alert Styles */
+.alert-dismissible .close {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 1.25rem 1rem;
+    color: inherit;
+}
+
+/* Summary Section Styles */
+.summary {
+    margin-top: 30px; /* Space above summary */
+}
+
+.summary div {
+    margin-bottom: 10px; /* Space between summary items */
+    font-weight: bold; /* Bold text for summary items */
+}
+
+/* Responsive Design */
+@media (max-width: 576px) {
+    .filter-form {
+        flex-direction: column; /* Stack filter elements on small screens */
+    }
+
+    .filter-form input[type="date"],
+    .filter-form select {
+        margin-bottom: 10px; /* Space below inputs */
+        margin-right: 0; /* Remove right margin */
+    }
+
+    button {
+        width: 100%; /* Full width for buttons on small screens */
+    }
+}
+
+/* Custom Styles for Specific Pages */
+.container-small {
+    max-width: 600px;
+}
