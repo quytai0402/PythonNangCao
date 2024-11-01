@@ -436,7 +436,7 @@ def analysis():
     df = pd.DataFrame(data)  # Khởi tạo DataFrame từ dữ liệu
 
     if 'date' not in df.columns or df.empty or 'amount' not in df.columns:  # Kiểm tra điều kiện không có dữ liệu
-        flash('Không có dữ liệu để phân tích.', 'danger')  # Thông báo không có dữ liệu
+        # flash('Không có dữ liệu để phân tích.', 'danger')  # Thông báo không có dữ liệu
         return redirect(url_for('index'))  # Quay lại trang chính
 
     df['date'] = pd.to_datetime(df['date'], errors='coerce')  # Chuyển đổi cột 'date' thành định dạng datetime
@@ -503,4 +503,4 @@ def change_password():
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()  # Tạo bảng nếu chúng không tồn tại
-    app.run(host='0.0.0.0')  # Chạy ứng dụng Flask
+    app.run(host='0.0.0.0')  # Chạy ứng dụng Flask với chế độ debug
