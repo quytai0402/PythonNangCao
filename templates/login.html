@@ -5,11 +5,11 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 
-    <script src="https://kit.fontawesome.com/a076d05399.js"></script> <!-- Thêm FontAwesome -->
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f8f9fa;
+            background: linear-gradient(to right, #6a82fb, #fc5c7d);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -20,9 +20,9 @@
         .container {
             max-width: 400px;
             background-color: #ffffff;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
         }
 
         h1 {
@@ -37,13 +37,13 @@
         }
 
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 25px;
             position: relative;
         }
 
         label {
             font-weight: bold;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
         }
 
         .form-control {
@@ -55,48 +55,49 @@
         }
 
         .form-control:focus {
-            border-color: #007bff;
+            border-color: #6a82fb;
             outline: none;
+            box-shadow: 0 0 5px rgba(106, 130, 251, 0.5);
         }
 
         .btn-primary {
             width: 100%;
             padding: 12px;
             border-radius: 5px;
-            background-color: #007bff;
+            background-color: #6a82fb;
             color: white;
             font-weight: bold;
             transition: background-color 0.3s;
         }
 
         .btn-primary:hover {
-            background-color: #0056b3;
+            background-color: #5a72d2;
         }
 
         .btn-link {
             display: block;
             text-align: center;
             margin-top: 10px;
-            color: #007bff;
+            color: #6a82fb;
             text-decoration: none;
         }
 
         .btn-link:hover {
             text-decoration: underline;
-            color: #0056b3;
+            color: #5a72d2;
         }
 
         .form-icon {
             position: absolute;
-            right: 10px;
+            right: 15px;
             top: 50%;
             transform: translateY(-50%);
-            color: #007bff;
+            color: #6a82fb;
         }
 
         @media (max-width: 576px) {
             .container {
-                padding: 20px;
+                padding: 30px;
             }
         }
     </style>
