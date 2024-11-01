@@ -29,7 +29,8 @@ if not os.environ.get('SECRET_KEY'):  # Kiểm tra xem khóa bí mật có tồn
 
 app = Flask(__name__)  # Khởi tạo ứng dụng Flask
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')  # Cấu hình khóa bí mật
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///dangnhap.db'  # Cấu hình kết nối đến cơ sở dữ liệu
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://user:password@db:5432/finance_db' # (Chạy trên docker)
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///dangnhap.db'  (Chạy demo trên máy cá nhân)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # Không theo dõi thay đổi trên cơ sở dữ liệu
 migrate = Migrate(app, db)  # Khởi tạo migrate với ứng dụng và cơ sở dữ liệu
 db.init_app(app)  # Khởi tạo cơ sở dữ liệu với ứng dụng Flask
@@ -436,7 +437,7 @@ def analysis():
     df = pd.DataFrame(data)  # Khởi tạo DataFrame từ dữ liệu
 
     if 'date' not in df.columns or df.empty or 'amount' not in df.columns:  # Kiểm tra điều kiện không có dữ liệu
-        # flash('Không có dữ liệu để phân tích.', 'danger')  # Thông báo không có dữ liệu
+        flash('Không có dữ liệu để phân tích.', 'danger')  # Thông báo không có dữ liệu
         return redirect(url_for('index'))  # Quay lại trang chính
 
     df['date'] = pd.to_datetime(df['date'], errors='coerce')  # Chuyển đổi cột 'date' thành định dạng datetime
