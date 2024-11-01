@@ -1,145 +1,284 @@
 <!DOCTYPE html>
-<html>
+<html lang="vi">
 <head>
-    <title>Dashboard</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bảng Điều Khiển</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Roboto', sans-serif;
+            color: #495057;
+        }
+        .navbar-brand a {
+    color: #fff !important;
+    font-size: 1.8rem;
+    font-weight: bold;
+    text-decoration: none;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    transition: color 0.3s, text-shadow 0.3s;
+}
+
+.navbar-brand a:hover {
+    color: #ffcc00 !important;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+}
+        .navbar-vertical {
+    position: fixed;
+    top: 0; 
+    left: 0;
+    height: 100%;
+    width: 250px;
+    background: linear-gradient(90deg, rgba(255, 0, 150, 1) 0%, rgba(0, 204, 255, 1) 100%);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding-top: 10px;
+    border-radius: 0 10px 10px 0; 
+}
+
+.navbar-brand {
+    font-weight: bold;
+    color: #fff !important;
+    text-align: center; 
+    margin-bottom: 20px;
+    font-size: 1.5rem;
+}
+
+.navbar-nav {
+    flex-direction: column;
+    width: 100%;
+    padding-left: 0; 
+    padding-top: 0; /* Loại bỏ padding trên */
+    margin-top: 0; /* Loại bỏ margin trên */
+    position: absolute; /* Đặt vị trí tuyệt đối */
+    top: 10px; /* Điều chỉnh khoảng cách từ trên xuống */
+    left: 0; 
+    width: 100%; 
+}
+
+.navbar-nav .nav-link {
+    color: #fff !important;
+    font-weight: bold;
+    transition: color 0.3s;
+    padding: 10px 20px; 
+    margin-bottom: 10px; 
+    border-radius: 0;
+    background-color: rgba(255, 255, 255, 0.1); 
+    text-align: left; 
+    display: flex;
+    align-items: center; 
+}
+
+.navbar-nav .nav-link i {
+    margin-right: 10px; 
+}
+
+.navbar-nav .nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.2); 
+}
+
+.container {
+    margin-left: 250px; 
+    padding: 20px;
+    position: relative; 
+}
+        .content {
+            margin-left: 270px;
+            padding: 20px;
+        }
+        .card {
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+            margin-bottom: 30px;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        .card-header {
+            background-color: #007bff;
+            color: white;
+            border-radius: 15px 15px 0 0;
+            font-weight: bold;
+        }
+        h1 {
+            text-align: center;
+            margin: 40px 0;
+            color: #343a40;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+        }
+        .btn-primary {
+            background-color: #28a745;
+            border-color: #28a745;
+        }
+        .btn-primary:hover {
+            background-color: #218838;
+            border-color: #1e7e34;
+        }
+        .search-bar {
+            margin-bottom: 20px;
+        }
+    </style>
 </head>
 <body>
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark">
-        <a class="navbar-brand" href="/dashboard">Quản lý tài chính cá nhân</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="/">Xem giao dịch</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/add">Thêm giao dịch</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/report">Báo cáo tài chính</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/analysis">Phân tích</a>
-                </li>
+    <nav class="navbar navbar-vertical">
+        <ul class="navbar-nav">
+            <li class="navbar-brand"><a href="/dashboard">Quản lý tài chính</li>
+            <li class="nav-item"><a class="nav-link" href="/">Xem giao dịch</a></li>
+            <li class="nav-item"><a class="nav-link" href="/report">Báo cáo tài chính</a></li>
+            <li class="nav-item"><a class="nav-link" href="/analysis">Phân tích</a></li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Tài khoản
+                </a>
+                <div class="dropdown-menu" aria-labelledby="userDropdown">
+                    <a class="dropdown-item" href="/profile">Hồ sơ</a>
+                    <a class="dropdown-item" href="/logout">Đăng xuất</a>
+                </div>
+            </li>
+        </ul>
+    </div>
+</nav>
 
-            </ul>
-            <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link" href="/profile">Hồ sơ</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/logout">Đăng xuất</a>
-                </li>
-            </ul>
+    <div class="content">
+        <h1>Bảng Điều Khiển Cá Nhân</h1>
+
+        <div class="row search-bar">
+            <div class="col-md-12">
+                <input class="form-control" id="searchInput" type="text" placeholder="Tìm kiếm giao dịch...">
+            </div>
         </div>
-    </nav>
 
-    <!-- Content -->
-    <div class="container mt-5">
-        <h1 class="text-center mb-4">Tổng Quan</h1>
         <div class="row">
-            <div class="col-md-6 mb-4">
+            <div class="col-md-6">
                 <div class="card">
                     <div class="card-header">
-                        Biểu đồ chi tiêu
+                        Doanh thu theo tháng
+                    </div>
+                    <div class="card-body">
+                        <canvas id="myChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        Tỷ lệ chi tiêu
                     </div>
                     <div class="card-body">
                         <canvas id="expenseChart"></canvas>
                     </div>
                 </div>
             </div>
-            <div class="col-md-6 mb-4">
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
-                        Biểu đồ thu nhập
+                        Tổng quan
                     </div>
-                    <div class="card-body">
-                        <canvas id="incomeChart"></canvas>
+                    <div class="card-body d-flex justify-content-around">
+                        <div>
+                            <h5>Tổng doanh thu:</h5>
+                            <h4 style="color: #28a745;">{{ total_income | vnd_currency }}</h4>
+                        </div>
+                        <div>
+                            <h5>Tổng chi tiêu:</h5>
+                            <h4 style="color: #dc3545;">{{ total_expense | vnd_currency }}</h4>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="row mt-4">
-            <div class="col-md-12">
-                <div class="card">
-                    <div class="card-header">
-                        Giao dịch gần đây
-                    </div>
-                    <div class="card-body">
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th>Ngày</th>
-                                    <th>Loại</th>
-                                    <th>Số tiền</th>
-                                    <th>Mô tả</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <!-- Thêm các giao dịch gần đây tại đây -->
-                                <tr>
-                                    <td>01/01/2023</td>
-                                    <td>Chi tiêu</td>
-                                    <td>-500,000 VND</td>
-                                    <td>Mua sắm</td>
-                                </tr>
-                                <tr>
-                                    <td>02/01/2023</td>
-                                    <td>Thu nhập</td>
-                                    <td>10,000,000 VND</td>
-                                    <td>Lương</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                Giao dịch gần đây
+                <a href="/add" class="btn btn-primary">Thêm giao dịch</a>
+            </div>
+            <div class="card-body">
+                <table class="table table-bordered table-hover" id="transactionTable">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Tên giao dịch</th>
+                            <th>Số tiền</th>
+                            <th>Ngày</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for transaction in recent_transactions %}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td>{{ transaction.category }}</td>
+                            <td>{{ transaction.amount | vnd_currency }}</td>
+                            <td>{{ transaction.date.strftime('%d/%m/%Y') }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
 
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script>
-        // Biểu đồ chi tiêu
-        var ctxExpense = document.getElementById('expenseChart').getContext('2d');
-        var expenseChart = new Chart(ctxExpense, {
-            type: 'pie',
+        const ctx = document.getElementById('myChart').getContext('2d');
+        const myChart = new Chart(ctx, {
+            type: 'bar',
             data: {
-                labels: ['Mua sắm', 'Ăn uống', 'Giải trí', 'Khác'],
+                labels: Object.keys({{ income_data|tojson }}),
                 datasets: [{
-                    data: [500000, 300000, 200000, 100000],
-                    backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0']
+                    label: 'Doanh thu',
+                    data: Object.values({{ income_data|tojson }}),
+                    backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
                 }]
             },
             options: {
-                title: {
-                    display: true,
-                    text: 'Chi tiêu'
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
                 }
             }
         });
 
-        // Biểu đồ thu nhập
-        var ctxIncome = document.getElementById('incomeChart').getContext('2d');
-        var incomeChart = new Chart(ctxIncome, {
+        const expenseCtx = document.getElementById('expenseChart').getContext('2d');
+        const expenseChart = new Chart(expenseCtx, {
             type: 'pie',
             data: {
-                labels: ['Lương', 'Đầu tư', 'Khác'],
+                labels: Object.keys({{ expense_data|tojson }}),
                 datasets: [{
-                    data: [10000000, 2000000, 1000000],
-                    backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56']
+                    data: Object.values({{ expense_data|tojson }}),
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.6)',
+                        'rgba(75, 192, 192, 0.6)',
+                        'rgba(255, 206, 86, 0.6)',
+                        'rgba(54, 162, 235, 0.6)'
+                    ]
                 }]
             },
             options: {
-                title: {
-                    display: true,
-                    text: 'Thu nhập'
-                }
+                responsive: true
             }
+        });
+
+        // Hàm tìm kiếm giao dịch
+        document.getElementById('searchInput').addEventListener('keyup', function() {
+            const value = this.value.toLowerCase();
+            const rows = document.querySelectorAll("#transactionTable tbody tr");
+
+            rows.forEach(row => {
+                row.style.display = row.textContent.toLowerCase().includes(value) ? "" : "none";
+            });
         });
     </script>
 </body>

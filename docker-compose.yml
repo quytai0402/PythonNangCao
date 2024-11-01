@@ -1,0 +1,11 @@
+services:
+  web:  # Tên dịch vụ
+    build: .  # Xây dựng hình ảnh Docker từ thư mục hiện tại
+    ports:  # Cấu hình cổng
+      - "5001:5001"  # Thay đổi cổng máy chủ thành 5001
+    volumes:  # Gắn kết thư mục
+      - .:/app  # Gắn thư mục hiện tại vào thư mục /app trong container
+    environment:  # Biến môi trường
+      - FLASK_ENV=development  # Thiết lập môi trường Flask là development
+      - FLASK_APP=app.py  # Thiết lập tệp chính của ứng dụng Flask
+    command: ["flask", "run", "--host=0.0.0.0","--port=5001"]  # Lệnh để chạy ứng dụng Flask

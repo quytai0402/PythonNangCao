@@ -1,137 +1,271 @@
 <!DOCTYPE html>
-<html>
+<html lang="vi">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Phân tích và Dự báo</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styleanalysis.css') }}">
     <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Roboto', sans-serif;
+        }
+        
+        .navbar-vertical {
+    position: fixed;
+    top: 0; 
+    left: 0;
+    height: 100%;
+    width: 250px;
+    background: linear-gradient(90deg, rgba(255, 0, 150, 1) 0%, rgba(0, 204, 255, 1) 100%);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding-top: 10px;
+    border-radius: 0 10px 10px 0; 
+}
+
+.navbar-brand {
+    font-weight: bold;
+    color: #fff !important;
+    text-align: center; 
+    margin-bottom: 20px;
+    font-size: 1.5rem;
+}
+
+.navbar-nav {
+    flex-direction: column;
+    width: 100%;
+    padding-left: 0; 
+    padding-top: 0; /* Loại bỏ padding trên */
+    margin-top: 0; /* Loại bỏ margin trên */
+    position: absolute; /* Đặt vị trí tuyệt đối */
+    top: 10px; /* Điều chỉnh khoảng cách từ trên xuống */
+    left: 0; 
+    width: 100%; 
+}
+
+.navbar-nav .nav-link {
+    color: #fff !important;
+    font-weight: bold;
+    transition: color 0.3s;
+    padding: 10px 20px; 
+    margin-bottom: 10px; 
+    border-radius: 0;
+    background-color: rgba(255, 255, 255, 0.1); 
+    text-align: left; 
+    display: flex;
+    align-items: center; 
+}
+
+.navbar-nav .nav-link i {
+    margin-right: 10px; 
+}
+
+.navbar-nav .nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.2); 
+}
+
+.container {
+    margin-left: 250px; /* Giữ khoảng cách với navbar */
+    padding: 20px;
+    position: relative;
+    max-width: 1200px; /* Tăng độ rộng tối đa từ 800px lên 1200px */
+    margin-right: auto;
+    margin-left: 270px; /* Điều chỉnh khoảng cách trái để tránh navbar */
+    width: calc(100% - 290px); /* Đảm bảo container không bị tràn */
+}
+
+/* Thêm responsive cho màn hình nhỏ */
+@media (max-width: 768px) {
+    .container {
+        margin-left: auto;
+        margin-right: auto;
+        width: 95%;
+        padding: 15px;
+    }
+}
+
+        
+        h1, h2 {
+            color: #343a40;
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            font-weight: bold;
+        }
+
         .analysis-table th, .analysis-table td {
             text-align: center;
             vertical-align: middle;
         }
+        
         .analysis-table th {
-            background-color: #f8f9fa;
+            background-color: #007bff;
+            color: white;
         }
+        
         .analysis-table tbody tr:nth-child(odd) {
-            background-color: #f2f2f2;
+            background-color: #eef;
         }
+        
         .analysis-table tbody tr:hover {
-            background-color: #e9ecef;
+            background-color: #d1ecf1;
+            transition: background-color 0.3s ease;
         }
+
+        .canvas-container {
+            position: relative;
+            margin: 30px 0;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+            background-color: white;
+        }
+
+        .card {
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+        }
+
+        footer {
+            background-color: #343a40;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+        }
+
+        .help-text {
+            margin: 20px 0;
+            font-style: italic;
+            color: #6c757d;
+        }
+        .navbar-brand a {
+    color: #fff !important;
+    font-size: 1.8rem;
+    font-weight: bold;
+    text-decoration: none;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    transition: color 0.3s, text-shadow 0.3s;
+}
+
+.navbar-brand a:hover {
+    color: #ffcc00 !important;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+}
     </style>
 </head>
 <body>
     <!-- Navbar -->
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg fixed-top">
-        <a class="navbar-brand" href="/dashboard">Quản lý tài chính cá nhân</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="/">Xem giao dịch</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/add">Thêm giao dịch</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/report">Báo cáo tài chính</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/analysis">Phân tích</a>
-                </li>
-            </ul>
+    <nav class="navbar navbar-vertical">
             <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link" href="/profile">Hồ sơ</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/logout">Đăng xuất</a>
+                <li class="navbar-brand"><a href="/dashboard">Quản lý tài chính</li>
+                <li class="nav-item"><a class="nav-link" href="/">Xem giao dịch</a></li>
+                <li class="nav-item"><a class="nav-link" href="/report">Báo cáo tài chính</a></li>
+                <li class="nav-item"><a class="nav-link" href="/analysis">Phân tích</a></li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Tài khoản
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="userDropdown">
+                        <a class="dropdown-item" href="/profile">Hồ sơ</a>
+                        <a class="dropdown-item" href="/logout">Đăng xuất</a>
+                    </div>
                 </li>
             </ul>
         </div>
     </nav>
+
     <div class="container mt-4">
         <h1 class="text-center mb-4">Phân tích Chi Tiêu và Thu Nhập hàng tháng</h1>
-        <!-- Thêm bộ lọc tháng -->
+        
+        <div class="help-text text-center">
+            Chọn tháng để xem phân tích chi tiêu và thu nhập.
+        </div>
+
         <div class="form-group">
             <label for="monthSelect">Chọn tháng:</label>
             <select id="monthSelect" class="form-control">
                 <option value="">Tất cả</option>
-                <option value="1" {% if selected_month == '1' %}selected{% endif %}>Tháng 1</option>
-                <option value="2" {% if selected_month == '2' %}selected{% endif %}>Tháng 2</option>
-                <option value="3" {% if selected_month == '3' %}selected{% endif %}>Tháng 3</option>
-                <option value="4" {% if selected_month == '4' %}selected{% endif %}>Tháng 4</option>
-                <option value="5" {% if selected_month == '5' %}selected{% endif %}>Tháng 5</option>
-                <option value="6" {% if selected_month == '6' %}selected{% endif %}>Tháng 6</option>
-                <option value="7" {% if selected_month == '7' %}selected{% endif %}>Tháng 7</option>
-                <option value="8" {% if selected_month == '8' %}selected{% endif %}>Tháng 8</option>
-                <option value="9" {% if selected_month == '9' %}selected{% endif %}>Tháng 9</option>
-                <option value="10" {% if selected_month == '10' %}selected{% endif %}>Tháng 10</option>
-                <option value="11" {% if selected_month == '11' %}selected{% endif %}>Tháng 11</option>
-                <option value="12" {% if selected_month == '12' %}selected{% endif %}>Tháng 12</option>
+                {% for month in range(1, 13) %}
+                    <option value="{{ month }}" {% if selected_month == month|string %}selected{% endif %}>Tháng {{ month }}</option>
+                {% endfor %}
             </select>
         </div>
 
-        <canvas id="analysisChart"></canvas>
+        <div class="canvas-container">
+            <canvas id="analysisChart"></canvas>
+        </div>
 
         {% if analysis_dict|length == 0 %}
-            <h2 class="mt-4 text-center">Không có dữ liệu cho tháng đã chọn</h2>
+            <!-- <h2 class="mt-4 text-center">Không có dữ liệu cho tháng đã chọn</h2> -->
         {% else %}
-            <!-- Hiển thị kết quả phân tích Thu Nhập -->
-            <h2 class="mt-4">Kết quả phân tích Thu Nhập</h2>
-            <table class="table table-bordered analysis-table">
-                <thead>
-                    <tr>
-                        <th>Tháng</th>
-                        <th>Tổng Thu Nhập</th>
-                        <th>Thu Nhập Trung Bình</th>
-                        <th>Thu Nhập Cao Nhất</th>
-                        <th>Thu Nhập Thấp Nhất</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for row in analysis_dict %}
-                        <tr>
-                            <td>{{ row['Tháng'] }}</td>
-                            <td>{{ row['Tổng Thu Nhập'] | vnd_currency }}</td>
-                            <td>{{ row['Thu Nhập Trung Bình'] | vnd_currency }}</td>
-                            <td>{{ row['Thu Nhập Cao Nhất'] | vnd_currency }}</td>
-                            <td>{{ row['Thu Nhập Thấp Nhất'] | vnd_currency }}</td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="mt-4">Kết quả phân tích Thu Nhập</h2>
+                    <table class="table table-bordered analysis-table">
+                        <thead>
+                            <tr>
+                                <th>Tháng</th>
+                                <th>Tổng Thu Nhập</th>
+                                <th>Thu Nhập Trung Bình</th>
+                                <th>Thu Nhập Cao Nhất</th>
+                                <th>Thu Nhập Thấp Nhất</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in analysis_dict %}
+                                <tr>
+                                    <td>{{ row['Tháng'] }}</td>
+                                    <td>{{ row['Tổng Thu Nhập'] | vnd_currency }}</td>
+                                    <td>{{ row['Thu Nhập Trung Bình'] | vnd_currency }}</td>
+                                    <td>{{ row['Thu Nhập Cao Nhất'] | vnd_currency }}</td>
+                                    <td>{{ row['Thu Nhập Thấp Nhất'] | vnd_currency }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
 
-            <!-- Hiển thị kết quả phân tích Chi Tiêu -->
-            <h2 class="mt-4">Kết quả phân tích Chi Tiêu</h2>
-            <table class="table table-bordered analysis-table">
-                <thead>
-                    <tr>
-                        <th>Tháng</th>
-                        <th>Tổng Chi Tiêu</th>
-                        <th>Chi Tiêu Trung Bình</th>
-                        <th>Chi Tiêu Cao Nhất</th>
-                        <th>Chi Tiêu Thấp Nhất</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for row in analysis_dict %}
-                        <tr>
-                            <td>{{ row['Tháng'] }}</td>
-                            <td>{{ row['Tổng Chi Tiêu'] | vnd_currency }}</td>
-                            <td>{{ row['Chi Tiêu Trung Bình'] | vnd_currency }}</td>
-                            <td>{{ row['Chi Tiêu Cao Nhất'] | vnd_currency }}</td>
-                            <td>{{ row['Chi Tiêu Thấp Nhất'] | vnd_currency }}</td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="mt-4">Kết quả phân tích Chi Tiêu</h2>
+                    <table class="table table-bordered analysis-table">
+                        <thead>
+                            <tr>
+                                <th>Tháng</th>
+                                <th>Tổng Chi Tiêu</th>
+                                <th>Chi Tiêu Trung Bình</th>
+                                <th>Chi Tiêu Cao Nhất</th>
+                                <th>Chi Tiêu Thấp Nhất</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in analysis_dict %}
+                                <tr>
+                                    <td>{{ row['Tháng'] }}</td>
+                                    <td>{{ row['Tổng Chi Tiêu'] | vnd_currency }}</td>
+                                    <td>{{ row['Chi Tiêu Trung Bình'] | vnd_currency }}</td>
+                                    <td>{{ row['Chi Tiêu Cao Nhất'] | vnd_currency }}</td>
+                                    <td>{{ row['Chi Tiêu Thấp Nhất'] | vnd_currency }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         {% endif %}
     </div>
+
+  
 
     <script>
         document.getElementById('monthSelect').addEventListener('change', function() {
@@ -142,7 +276,7 @@
         const expenseData = JSON.parse('{{ expense_data|tojson|safe }}');
         const incomeData = JSON.parse('{{ income_data|tojson|safe }}');
         const ctx = document.getElementById('analysisChart').getContext('2d');
-        
+
         if (Object.keys(expenseData).length === 0 && Object.keys(incomeData).length === 0) {
             ctx.font = "20px Arial";
             ctx.fillText("Không có dữ liệu cho tháng đã chọn", 50, 50);
@@ -163,15 +297,17 @@
                             label: 'Chi tiêu hàng ngày',
                             data: expenseValues,
                             borderColor: 'rgba(255, 99, 132, 1)',  // Màu đỏ cho chi tiêu
-                            borderWidth: 1,
-                            fill: false
+                            borderWidth: 2,
+                            fill: false,
+                            pointRadius: 3
                         },
                         {
                             label: 'Thu nhập hàng ngày',
                             data: incomeValues,
                             borderColor: 'rgba(54, 162, 235, 1)',  // Màu xanh cho thu nhập
-                            borderWidth: 1,
-                            fill: false
+                            borderWidth: 2,
+                            fill: false,
+                            pointRadius: 3
                         }
                     ]
                 },

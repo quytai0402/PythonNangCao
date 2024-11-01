@@ -13,6 +13,7 @@ from models import db, User, Transaction  # Các mô hình cơ sở dữ liệu
 from datetime import datetime, date  # Làm việc với thời gian
 import csv  # Xử lý tệp CSV
 import calendar  # Xử lý lịch
+
 from forms import SignupForm  # Các biểu mẫu cho đăng ký
 from forms import EditProfileForm, ChangePasswordForm  # Các biểu mẫu cho chỉnh sửa hồ sơ và đổi mật khẩu
 import matplotlib.pyplot as plt  # Vẽ biểu đồ
@@ -73,27 +74,32 @@ def signup():
 @login_required
 def profile():
     user = current_user  # Lấy thông tin người dùng hiện tại
-    return render_template('profile.html', user=user)  # Render trang hồ sơ
+    edit_profile_form = EditProfileForm(obj=user)
+    change_password_form = ChangePasswordForm()
+    return render_template('profile.html', user=user, edit_profile_form=edit_profile_form, change_password_form=change_password_form)
 
 # Định nghĩa route /edit_profile
-@app.route('/edit_profile', methods=['GET', 'POST'])
+@app.route('/edit_profile', methods=['POST'])
 @login_required
 def edit_profile():
-    user = current_user  # Lấy thông tin người dùng hiện tại
-    form = EditProfileForm(obj=user)  # Khởi tạo biểu mẫu chỉnh sửa thông tin
-    if form.validate_on_submit():  # Nếu biểu mẫu hợp lệ
-        if (user.first_name == form.first_name.data and  # Kiểm tra nếu không có thay đổi nào
-            user.last_name == form.last_name.data and
-            user.email == form.email.data):
-            flash('Không có thay đổi nào được thực hiện.', 'warning')  # Thông báo không có thay đổi
-        else:
-            user.first_name = form.first_name.data  # Cập nhật họ tên
-            user.last_name = form.last_name.data
-            user.email = form.email.data  # Cập nhật email
-            db.session.commit()  # Cam kết thay đổi
-            flash('Hồ sơ của bạn đã được cập nhật.', 'success')  # Thông báo thành công
-            return redirect(url_for('profile'))  # Chuyển hướng đến trang hồ sơ
-    return render_template('edit_profile.html', form=form)  # Render trang chỉnh sửa hồ sơ
+    user = current_user
+    form = EditProfileForm()
+    if form.validate_on_submit():
+        user.first_name = form.first_name.data
+        user.last_name = form.last_name.data
+        user.email = form.email.data
+        try:
+            db.session.commit()
+            return jsonify({'message': 'Hồ sơ đã được cập nhật thành công.'}), 200
+        except IntegrityError:
+            db.session.rollback()
+            return jsonify({'errors': ['Email đã được sử dụng.']}), 400
+    else:
+        errors = []
+        for field, error_messages in form.errors.items():
+            for err in error_messages:
+                errors.append(err)
+        return jsonify({'errors': errors}), 400
 
 
 @app.route('/delete/<int:transaction_id>', methods=['GET', 'POST'])  # Route xóa giao dịch
@@ -107,39 +113,35 @@ def delete_transaction(transaction_id):
 
     db.session.delete(transaction)  # Xóa giao dịch khỏi cơ sở dữ liệu
     db.session.commit()  # Cam kết thay đổi
-    flash('Giao dịch đã bị xóa.', 'success')  # Thông báo thành công
     return redirect(url_for('index'))  # Quay lại trang chính
 
-@app.route('/edit/<int:transaction_id>', methods=['GET', 'POST'])  # Route chỉnh sửa giao dịch
-@login_required  # Yêu cầu người dùng phải đăng nhập
+
+@app.route('/edit/<int:transaction_id>', methods=['POST'])
+@login_required
 def edit_transaction(transaction_id):
-    transaction = Transaction.query.get_or_404(transaction_id)  # Lấy giao dịch hoặc trả về lỗi 404 nếu không tìm thấy
-    form = EditTransactionForm(obj=transaction)  # Khởi tạo form với dữ liệu của giao dịch hiện tại
-    
-    # Đặt lựa chọn danh mục dựa trên loại giao dịch
-    if form.type.data == 'Thu Nhập':
-        form.category.choices = [('Lương', 'Lương'), ('Thưởng', 'Thưởng'), ('Đầu tư', 'Đầu tư'), ('Khác', 'Khác')]
-    elif form.type.data == 'Chi Tiêu':
-        form.category.choices = [('Mua sắm', 'Mua sắm'), ('Giải trí', 'Giải trí'), ('Sức khỏe', 'Sức khỏe'), ('Đi lại', 'Đi lại'), ('Khác', 'Khác')]
-    
-    if form.validate_on_submit():  # Nếu form hợp lệ
-        transaction.type = form.type.data  # Cập nhật loại giao dịch
-        transaction.category = form.category.data  # Cập nhật danh mục
-        transaction.amount = int(form.amount.data)  # Cập nhật số tiền và chuyển đổi sang số nguyên
-        transaction.date = form.date.data  # Cập nhật ngày
-        transaction.description = form.description.data  # Cập nhật mô tả
-        db.session.commit()  # Cam kết thay đổi
-        flash('Giao dịch đã được cập nhật thành công!', 'success')  # Thông báo thành công
-        return redirect(url_for('index'))  # Quay lại trang chính
-    else:
-        for field, errors in form.errors.items():  # Kiểm tra lỗi trong form
-            for error in errors:
-                flash(f"Lỗi trong trường {getattr(form, field).label.text}: {error}", 'danger')  # Thông báo lỗi
-    
-    # Định dạng số tiền không có phần thập phân
-    formatted_amount = "{:,.0f}".format(transaction.amount)
-    
-    return render_template('edit.html', form=form, transaction=transaction, formatted_amount=formatted_amount)  # Render trang chỉnh sửa
+    transaction = Transaction.query.get_or_404(transaction_id)
+    if transaction.user_id != current_user.id:
+        abort(403)  # Forbidden access
+
+    form = EditTransactionForm(obj=transaction) # use obj=transaction
+    form.category.choices = get_categories(form.type.data)  # Populate categories based on type
+    if form.validate_on_submit():
+        transaction.type = form.type.data
+        transaction.category = form.category.data
+        transaction.amount = form.amount.data
+        transaction.date = form.date.data
+        db.session.commit()
+
+        return jsonify({'message': 'Giao dịch đã được cập nhật!'}), 200
+    return jsonify(form.errors), 400
+
+
+def get_categories(transaction_type):
+    if transaction_type == 'Thu Nhập':
+        return [('Lương', 'Lương'), ('Thưởng', 'Thưởng'), ('Đầu tư', 'Đầu tư')]
+    elif transaction_type == 'Chi Tiêu':
+        return [('Ăn uống', 'Ăn uống'), ('Mua sắm', 'Mua sắm'), ('Giải trí', 'Giải trí')]
+    return []
 
 @app.route('/login', methods=['GET', 'POST'])  # Route đăng nhập
 def login():
@@ -161,14 +163,21 @@ def login():
 @login_required
 def dashboard():
     # Truy vấn dữ liệu chi tiêu từ cơ sở dữ liệu
-    expenses = db.session.query(Transaction.category, db.func.sum(Transaction.amount)).filter_by(user_id=current_user.id, type='expense').group_by(Transaction.category).all()
+    expenses = db.session.query(Transaction.category, db.func.sum(Transaction.amount)).filter_by(user_id=current_user.id, type='Chi Tiêu').group_by(Transaction.category).all()
     expense_data = {category: amount for category, amount in expenses}
     
     # Truy vấn dữ liệu thu nhập từ cơ sở dữ liệu
-    incomes = db.session.query(Transaction.category, db.func.sum(Transaction.amount)).filter_by(user_id=current_user.id, type='income').group_by(Transaction.category).all()
+    incomes = db.session.query(Transaction.category, db.func.sum(Transaction.amount)).filter_by(user_id=current_user.id, type='Thu Nhập').group_by(Transaction.category).all()
     income_data = {category: amount for category, amount in incomes}
     
-    return render_template('dashboard.html', expense_data=expense_data, income_data=income_data)
+    # Lấy giao dịch gần đây
+    recent_transactions = Transaction.query.filter_by(user_id=current_user.id).order_by(Transaction.date.desc()).limit(5).all()
+    
+    # Tính tổng thu nhập và chi tiêu
+    total_income = sum(amount for category, amount in incomes)
+    total_expense = sum(amount for category, amount in expenses)
+    
+    return render_template('dashboard.html', expense_data=expense_data, income_data=income_data, recent_transactions=recent_transactions, total_income=total_income, total_expense=total_expense)
 
 
 @app.route('/logout')  # Route đăng xuất
@@ -299,41 +308,52 @@ def download_file(filename):
     return send_from_directory(app.instance_path, filename, as_attachment=True)  # Tải tệp xuống
 
 
-@app.route('/')  # Route trang chính
-@login_required  # Yêu cầu người dùng phải đăng nhập
+@app.route('/')
+@login_required
 def index():
-    transactions = Transaction.query.filter_by(user_id=current_user.id).order_by(Transaction.date.desc()).all()  # Lấy tất cả giao dịch của người dùng
-    return render_template('index.html', transactions=transactions, today=date.today())  # Render trang chính với danh sách giao dịch
+    search_term = request.args.get('search', '')
+    filter_type = request.args.get('type', 'Tất cả loại')
 
-@app.route('/add', methods=['GET', 'POST'])  # Route thêm giao dịch
-@login_required  # Yêu cầu người dùng phải đăng nhập
+    transactions_query = Transaction.query.filter_by(user_id=current_user.id)
+
+    if search_term:
+        transactions_query = transactions_query.filter(
+            db.or_(
+                Transaction.category.ilike(f"%{search_term}%"),  # Case-insensitive search
+                Transaction.amount.like(f"%{search_term}%"),
+                Transaction.date.like(f"%{search_term}%")
+
+
+            )
+        )
+
+    if filter_type != 'Tất cả loại':
+        transactions_query = transactions_query.filter_by(type=filter_type)
+
+    transactions = transactions_query.order_by(Transaction.date.desc()).all()
+
+    return render_template('index.html', transactions=transactions, form=TransactionForm())
+
+
+
+@app.route('/add', methods=['POST'])
+@login_required
 def add_transaction():
-    form = TransactionForm()  # Khởi tạo form cho giao dịch mới
-    
-    # Đặt lựa chọn danh mục dựa trên loại giao dịch
-    if form.type.data == 'Thu Nhập':
-        form.category.choices = [('Lương', 'Lương'), ('Thưởng', 'Thưởng'), ('Đầu tư', 'Đầu tư'), ('Khác', 'Khác')]
-    elif form.type.data == 'Chi Tiêu':
-        form.category.choices = [('Mua sắm', 'Mua sắm'), ('Giải trí', 'Giải trí'), ('Sức khỏe', 'Sức khỏe'), ('Đi lại', 'Đi lại'), ('Khác', 'Khác')]
-    
-    if form.validate_on_submit():  # Nếu form hợp lệ
+    form = TransactionForm()
+    form.category.choices = get_categories(form.type.data)  # Populate categories based on type
+    if form.validate_on_submit():
         transaction = Transaction(
-            type=form.type.data,  # Loại giao dịch
-            category=form.category.data,  # Danh mục giao dịch
-            amount=form.amount.data,  # Số tiền giao dịch
-            date=form.date.data,  # Ngày giao dịch
-            description=form.description.data,  # Mô tả giao dịch
-            user_id=current_user.id  # ID người dùng
-        )  # Tạo giao dịch mới với dữ liệu từ form
-        db.session.add(transaction)  # Thêm giao dịch vào phiên làm việc
-        db.session.commit()  # Cam kết thay đổi
-        flash('Giao dịch đã được thêm thành công!', 'success')  # Thông báo thành công
-        return redirect(url_for('index'))  # Quay lại trang chính
-    else:
-        for field, errors in form.errors.items():  # Kiểm tra lỗi trong form
-            for error in errors:
-                flash(f"Lỗi trong trường {getattr(form, field).label.text}: {error}", 'danger')  # Thông báo lỗi
-    return render_template('add.html', form=form)  # Render trang thêm giao dịch
+            type=form.type.data,
+            category=form.category.data,
+            amount=form.amount.data,
+            date=form.date.data,
+            description=form.description.data,
+            user_id=current_user.id
+        )
+        db.session.add(transaction)
+        db.session.commit()
+        return jsonify({'message': 'Giao dịch đã được thêm thành công!'}), 200
+    return jsonify(form.errors), 400
 
 
 
@@ -419,7 +439,8 @@ def analysis():
         flash('Không có dữ liệu để phân tích.', 'danger')  # Thông báo không có dữ liệu
         return redirect(url_for('index'))  # Quay lại trang chính
 
-    df['date'] = pd.to_datetime(df['date'])  # Chuyển đổi cột 'date' thành định dạng datetime
+    df['date'] = pd.to_datetime(df['date'], errors='coerce')  # Chuyển đổi cột 'date' thành định dạng datetime
+    df.dropna(subset=['date'], inplace=True)  # Xóa các hàng có giá trị 'date' là NaT
     df.set_index('date', inplace=True)  # Đặt cột 'date' làm chỉ số
 
     selected_month = request.args.get('month')  # Lấy tháng được chọn từ query string
@@ -460,22 +481,26 @@ def analysis():
 
 
 # Đổi mật khẩu
-@app.route('/change_password', methods=['GET', 'POST'])
+@app.route('/change_password', methods=['POST'])
 @login_required
 def change_password():
-    form = ChangePasswordForm()  # Khởi tạo biểu mẫu đổi mật khẩu
-    if form.validate_on_submit():  # Nếu biểu mẫu hợp lệ
-        user = current_user  # Lấy người dùng hiện tại
-        if check_password_hash(user.password, form.old_password.data):  # Kiểm tra mật khẩu cũ
-            user.password = generate_password_hash(form.new_password.data, method='pbkdf2:sha256')  # Mã hóa mật khẩu mới
-            db.session.commit()  # Cam kết thay đổi
-            flash('Mật khẩu của bạn đã được thay đổi.', 'success')  # Thông báo thành công
-        else:
-            flash('Mật khẩu cũ không đúng.', 'danger')  # Thông báo mật khẩu cũ không đúng
-    return render_template('change_password.html', form=form)  # Render trang đổi mật khẩu
-
+    form = ChangePasswordForm()
+    if form.validate_on_submit():
+        if not check_password_hash(current_user.password, form.old_password.data):
+            return jsonify({'errors': ['Mật khẩu cũ không đúng.']}), 400
+        if form.new_password.data != form.confirm_new_password.data:
+            return jsonify({'errors': ['Mật khẩu mới không khớp.']}), 400
+        current_user.password = generate_password_hash(form.new_password.data)
+        db.session.commit()
+        return jsonify({'message': 'Mật khẩu đã được đổi thành công.'}), 200
+    else:
+        errors = []
+        for field, error_messages in form.errors.items():
+            for err in error_messages:
+                errors.append(err)
+        return jsonify({'errors': errors}), 400
 
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()  # Tạo bảng nếu chúng không tồn tại
-    app.run(debug=True)  # Chạy ứng dụng Flask trong chế độ debug
+    app.run(host='0.0.0.0')  # Chạy ứng dụng Flask

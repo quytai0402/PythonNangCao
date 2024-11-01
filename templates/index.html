@@ -1,120 +1,508 @@
 <!DOCTYPE html>
-<html>
-<head>
-    <title>Quản lý tài chính cá nhân</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/styleindex.css') }}">
+<html lang="vi">
 
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý tài chính cá nhân</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Roboto', sans-serif;
+            color: #495057;
+        }
+        .navbar-brand a {
+            color: #fff !important;
+            font-size: 1.8rem;
+            font-weight: bold;
+            text-decoration: none;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            transition: color 0.3s, text-shadow 0.3s;
+        }
+
+        .navbar-brand a:hover {
+            color: #ffcc00 !important;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+        }
+        .navbar-vertical {
+            position: fixed;
+            top: 0; 
+            left: 0;
+            height: 100%;
+            width: 250px;
+            background: linear-gradient(90deg, rgba(255, 0, 150, 1) 0%, rgba(0, 204, 255, 1) 100%);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding-top: 10px;
+            border-radius: 0 10px 10px 0; 
+        }
+
+        .navbar-brand {
+            font-weight: bold;
+            color: #fff !important;
+            text-align: center; 
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+
+        .navbar-nav {
+            flex-direction: column;
+            width: 100%;
+            padding-left: 0; 
+            padding-top: 0; /* Loại bỏ padding trên */
+            margin-top: 0; /* Loại bỏ margin trên */
+            position: absolute; /* Đặt vị trí tuyệt đối */
+            top: 10px; /* Điều chỉnh khoảng cách từ trên xuống */
+            left: 0; 
+            width: 100%; 
+        }
+
+        .navbar-nav .nav-link {
+            color: #fff !important;
+            font-weight: bold;
+            transition: color 0.3s;
+            padding: 10px 20px; 
+            margin-bottom: 10px; 
+            border-radius: 0;
+            background-color: rgba(255, 255, 255, 0.1); 
+            text-align: left; 
+            display: flex;
+            align-items: center; 
+        }
+
+        .navbar-nav .nav-link i {
+            margin-right: 10px; 
+        }
+
+        .navbar-nav .nav-link:hover {
+            background-color: rgba(255, 255, 255, 0.2); 
+        }
+
+        .container {
+    margin-left: 270px;
+    padding: 30px;
+    position: relative;
+    max-width: 1400px; /* Increased from 1200px */
+    width: calc(100% - 290px);
+}.table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Adjusted table cell padding */
+.table th,
+.table td {
+    padding: 1rem;
+}
+
+/* Enhanced mobile responsiveness */
+@media (max-width: 992px) {
+    .container {
+        margin-left: auto;
+        margin-right: auto;
+        width: 95%;
+        padding: 20px;
+    }
     
+    .navbar-vertical {
+        display: none;
+    }
+    
+    .table-responsive {
+        font-size: 14px;
+    }
+}
+
+/* Improved spacing */
+.filter-container {
+    margin-bottom: 2rem;
+}
+
+        .hero {
+            background-color: #ffffff;
+            padding: 80px 0;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        footer {
+            background-color: #343a40;
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        .card-header {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .btn {
+            border-radius: 50px; /* Bo tròn cho tất cả các loại nút */
+        }
+
+        .btn-custom {
+            margin: 5px;
+            transition: background-color 0.3s ease;
+            border-radius: 50px; /* Bo tròn */
+        }
+
+        .btn-custom:hover {
+            opacity: 0.8;
+        }
+
+        .table th,
+        .table td {
+            vertical-align: middle;
+        }
+
+        .modal-body input {
+            border-radius: 0.25rem;
+        }
+    </style>
 </head>
+
 <body>
-    <!-- Navbar -->
+
 <!-- Navbar -->
-<nav class="navbar navbar-expand-lg fixed-top">
-    <a class="navbar-brand" href="/dashboard">Quản lý tài chính cá nhân</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item">
-                <a class="nav-link" href="/">Xem giao dịch</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/add">Thêm giao dịch</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/report">Báo cáo tài chính</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/analysis">Phân tích</a>
-            </li>
-        </ul>
-        <ul class="navbar-nav">
-            <li class="nav-item">
-                <a class="nav-link" href="/profile">Hồ sơ</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/logout">Đăng xuất</a>
-            </li>
-        </ul>
-    </div>
+<nav class="navbar navbar-vertical">
+    <ul class="navbar-nav">
+        <li class="navbar-brand"><a href="/dashboard">Quản lý tài chính</a></li>
+        <li class="nav-item"><a class="nav-link" href="/">Xem giao dịch</a></li>
+        <li class="nav-item"><a class="nav-link" href="/report">Báo cáo tài chính</a></li>
+        <li class="nav-item"><a class="nav-link" href="/analysis">Phân tích</a></li>
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Tài khoản
+            </a>
+            <div class="dropdown-menu" aria-labelledby="userDropdown">
+                <a class="dropdown-item" href="/profile">Hồ sơ</a>
+                <a class="dropdown-item" href="/logout">Đăng xuất</a>
+            </div>
+        </li>
+    </ul>
 </nav>
 
-    <!-- Content -->
-    <div class="container mt-4">
-        <h1 class="text-center mb-4">Giao dịch gần đây</h1>
 
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                {% for category, message in messages %}
-                    <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
-                        {{ message }}
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                {% endfor %}
-            {% endif %}
-        {% endwith %}
+    <!-- Hero Section -->
+    <div class="hero">
+        <h1>Chào mừng đến với Quản lý tài chính cá nhân!</h1>
+        <p>Quản lý thu nhập và chi tiêu một cách hiệu quả.</p>
+        <button class="btn btn-light btn-lg" data-toggle="modal" data-target="#addModal">Thêm giao dịch mới</button>
+    </div>
 
-        <div class="text-center mb-3">
-            <button id="income-btn" class="btn btn-success btn-custom">Thu Nhập</button>
-            <button id="expense-btn" class="btn btn-danger btn-custom">Chi Tiêu</button>
-            <button id="all-btn" class="btn btn-secondary btn-custom">Tất cả</button>
+    <!-- Content Section -->
+    <div class="container mt-5 pt-5">
+        <h2 class="text-center mb-4">Danh Sách Giao Dịch</h2>
+        
+        <div class="filter-container d-flex justify-content-between mb-3">
+            <input type="text" class="form-control" placeholder="Tìm kiếm giao dịch..." aria-label="Tìm kiếm giao dịch"
+                style="max-width: 300px;">
+            <select class="form-control w-25 ml-2">
+                <option>Tất cả loại</option>
+                <option>Thu Nhập</option>
+                <option>Chi Tiêu</option>
+            </select>
+            <button class="btn btn-outline-secondary ml-2">Lọc</button>
         </div>
 
-        <table class="table table-hover">
+        <table class="table table-bordered">
             <thead class="thead-dark">
                 <tr>
-                    <th>Loại</th>
-                    <th>Danh mục</th>
-                    <th>Số tiền</th>
-                    <th>Ngày</th>
-                    <th>Mô tả</th>
-                    <th>Hành động</th>
+                    <th scope="col">#</th>
+                    <th scope="col">Loại</th>
+                    <th scope="col">Mô Tả</th>
+                    <th scope="col">Số Tiền</th>
+                    <th scope="col">Ngày</th>
+                    <th scope="col">Hành Động</th>
                 </tr>
             </thead>
             <tbody id="transaction-table-body">
                 {% for transaction in transactions %}
-                <tr class="{{ 'table-success' if transaction.type == 'Thu Nhập' else 'table-danger' }}">
+                <tr class="transaction-row" data-type="{{ transaction.type }}">
+                    <th scope="row">{{ loop.index }}</th>
                     <td>{{ transaction.type }}</td>
                     <td>{{ transaction.category }}</td>
                     <td>{{ transaction.amount | vnd_currency }}</td>
-                    <td>{{ transaction.date.strftime('%Y-%m-%d') }}</td> 
-                    <td>{{ transaction.description }}</td>
+                    <td>{{ transaction.date.strftime('%Y-%m-%d') }}</td>
                     <td>
-                        <a href="{{ url_for('edit_transaction', transaction_id=transaction.id) }}" class="btn btn-primary btn-sm">Sửa</a>
-                        <a href="{{ url_for('delete_transaction', transaction_id=transaction.id) }}" 
-                           class="btn btn-danger btn-sm" 
-                           onclick="return confirm('Bạn có chắc chắn muốn xóa?')">Xóa</a>
+                        <button class="btn btn-primary btn-custom edit-btn" data-id="{{ transaction.id }}" data-type="{{ transaction.type }}" data-category="{{ transaction.category }}" data-amount="{{ transaction.amount }}" data-date="{{ transaction.date.strftime('%Y-%m-%d') }}" data-description="{{ transaction.description }}">Sửa</button>
+                        <form action="{{ url_for('delete_transaction', transaction_id=transaction.id) }}" method="POST" style="display:inline;" class="delete-transaction-form">
+                            <button type="submit" class="btn btn-danger btn-custom delete-btn" onclick="return confirm('Bạn có chắc chắn muốn xóa?')">Xóa</button>
+                        </form>
                     </td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
+
+        <!-- Modal Thêm Giao Dịch -->
+        <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addModalLabel">Thêm Giao Dịch Mới</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="add-transaction-form">
+                            {{ form.hidden_tag() }}
+                            <div class="form-group">
+                                <label for="transaction-type">Loại giao dịch</label>
+                                <select class="form-control" id="transaction-type" name="type">
+                                    <option value="Thu Nhập">Thu Nhập</option>
+                                    <option value="Chi Tiêu">Chi Tiêu</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="category">Mô Tả</label>
+                                <select class="form-control" id="category" name="category">
+                                    <!-- Các lựa chọn sẽ được cập nhật bằng JavaScript -->
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="amount">Số Tiền</label>
+                                <input type="number" class="form-control" id="amount" name="amount" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="date">Ngày</label>
+                                <input type="date" class="form-control" id="date" name="date" required>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                                <button type="submit" class="btn btn-primary">Lưu Giao Dịch</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Chỉnh Sửa Giao Dịch -->
+        <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editModalLabel">Chỉnh Sửa Giao Dịch</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="edit-transaction-form">
+                            {{ form.hidden_tag() }}
+                            <div class="form-group">
+                                <label for="edit-transaction-type">Loại giao dịch</label>
+                                <select class="form-control" id="edit-transaction-type" name="type">
+                                    <option value="Thu Nhập">Thu Nhập</option>
+                                    <option value="Chi Tiêu">Chi Tiêu</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="edit-category">Mô Tả</label>
+                                <select class="form-control" id="edit-category" name="category">
+                                    <!-- Các lựa chọn sẽ được cập nhật bằng JavaScript -->
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="edit-amount">Số Tiền</label>
+                                <input type="number" class="form-control" id="edit-amount" name="amount" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="edit-date">Ngày</label>
+                                <input type="date" class="form-control" id="edit-date" name="date" required>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                                <button type="submit" class="btn btn-primary">Cập Nhật</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <!-- Footer -->
+    
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
     <script>
-        $(document).ready(function(){
-            $("#income-btn").click(function(){
-                $("#transaction-table-body tr").hide();
-                $("#transaction-table-body tr.table-success").show();
+        toastr.options = {
+  "closeButton": true,
+  "debug": false,
+  "newestOnTop": false,
+  "progressBar": true,
+  "positionClass": "toast-top-right",
+  "preventDuplicates": false,
+  "onclick": null,
+  "showDuration": "300",
+  "hideDuration": "1000",
+  "timeOut": "5000",
+  "extendedTimeOut": "1000",
+  "showEasing": "swing",
+  "hideEasing": "linear",
+  "showMethod": "fadeIn",
+  "hideMethod": "fadeOut"
+};
+        document.addEventListener('DOMContentLoaded', function () {
+            const rows = document.querySelectorAll('.transaction-row');
+    
+            function filterTransactions() {
+                const searchInput = document.querySelector('.filter-container input[type="text"]');
+                const filterSelect = document.querySelector('.filter-container select');
+                const searchTerm = searchInput.value.toLowerCase();
+                const selectedType = filterSelect.value;
+    
+                rows.forEach(row => {
+                    const rowType = row.getAttribute('data-type');
+                    const rowCategory = row.querySelector('td:nth-child(3)').textContent.toLowerCase(); // Get category text
+                    const rowAmount = row.querySelector('td:nth-child(4)').textContent.toLowerCase().replace(/[^0-9]/g, '');  // Extract numbers from amount
+                    const rowDate = row.querySelector('td:nth-child(5)').textContent.toLowerCase(); // Get date text
+    
+                    const typeMatch = selectedType === 'Tất cả loại' || rowType === selectedType;
+                    const searchMatch = rowCategory.includes(searchTerm) || rowAmount.includes(searchTerm) || rowDate.includes(searchTerm);
+    
+                    if (typeMatch && searchMatch) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            }
+    
+            // Event listeners for search and filter
+            document.querySelector('.filter-container input[type="text"]').addEventListener('input', filterTransactions); // Filter on input change
+            document.querySelector('.filter-container select').addEventListener('change', filterTransactions); // Filter on select change
+            document.querySelector('.filter-container button').addEventListener('click', filterTransactions); // Filter on button click
+    
+            // Handle edit button click
+            document.querySelectorAll('.edit-btn').forEach(button => {
+                button.addEventListener('click', function () {
+                    const id = this.getAttribute('data-id');
+                    const type = this.getAttribute('data-type');
+                    const category = this.getAttribute('data-category');
+                    const amount = this.getAttribute('data-amount');
+                    const date = this.getAttribute('data-date');
+    
+                    console.log({ id, type, category, amount, date });  // Debugging line
+    
+                    const form = document.getElementById('edit-transaction-form');
+                    form.action = `/edit/${id}`;
+                    form.querySelector('#edit-transaction-type').value = type;
+                    form.querySelector('#edit-category').value = category;
+                    form.querySelector('#edit-amount').value = amount;
+                    form.querySelector('#edit-date').value = date;
+    
+                    updateCategories(form.querySelector('#edit-transaction-type'), form.querySelector('#edit-category'));
+    
+                    $('#editModal').modal('show');
+                });
             });
-
-            $("#expense-btn").click(function(){
-                $("#transaction-table-body tr").hide();
-                $("#transaction-table-body tr.table-danger").show();
+            
+            $('.delete-transaction-form').on('submit', function (e) {
+                e.preventDefault();
+                const form = this;
+                const url = form.action;
+                $.post(url, function (response) {
+                    toastr.success('Giao dịch đã được xóa thành công!');
+                    // Thêm độ trễ trước khi tải lại trang
+                    setTimeout(function() {
+                        location.reload(); 
+                    }, 2500); // Độ trễ 1 giây (1000 milliseconds)
+                }).fail(function (response) {
+                    toastr.error('Lỗi: ' + response.responseText);
+                });
             });
-
-            $("#all-btn").click(function(){
-                $("#transaction-table-body tr").show();
+            
+            // Handle form submission for adding transaction
+            $('#add-transaction-form').on('submit', function (e) {
+            e.preventDefault();
+            const formData = $(this).serialize();
+    $.post('/add', formData, function (response) {
+        toastr.success('Giao dịch đã được thêm thành công!');
+        // Thêm độ trễ trước khi tải lại trang
+        setTimeout(function() {
+            location.reload(); 
+        }, 2500); // Độ trễ 1 giây (1000 milliseconds)
+    }).fail(function (response) {
+        const errors = response.responseJSON; // Get errors from JSON
+        let errorMessages = '';
+        for (const field in errors) {
+            errorMessages += `${field}: ${errors[field].join(', ')}\n`;
+        }
+        toastr.error('Lỗi:\n' + errorMessages);  // Display specific errors
+    });
+});
+    
+            // Handle form submission for editing transaction
+            $('#edit-transaction-form').on('submit', function (e) {
+    e.preventDefault();
+    const formData = $(this).serialize();
+    const actionUrl = $(this).attr('action');
+    $.post(actionUrl, formData, function (response) {
+        toastr.success('Giao dịch đã được cập nhật thành công!');
+        // Thêm độ trễ trước khi tải lại trang
+        setTimeout(function() {
+            location.reload(); 
+        }, 2500); // Độ trễ 1 giây (1000 milliseconds)
+    }).fail(function (response) {
+        const errors = response.responseJSON; // Get errors from JSON
+        let errorMessages = '';
+        for (const field in errors) {
+            errorMessages += `${field}: ${errors[field].join(', ')}\n`;
+        }
+        toastr.error('Lỗi:\n' + errorMessages);  // Display specific errors
+    });
+});
+    
+            // Update categories based on transaction type
+            function updateCategories(selectElement, categoryElement) {
+                const type = selectElement.value;
+                const categories = type === 'Thu Nhập' ? ['Lương', 'Thưởng', 'Đầu tư'] : ['Ăn uống', 'Mua sắm', 'Giải trí'];
+                categoryElement.innerHTML = '';
+                categories.forEach(category => {
+                    const option = document.createElement('option');
+                    option.value = category;
+                    option.textContent = category;
+                    categoryElement.appendChild(option);
+                });
+            }
+    
+            // Initialize categories for add modal
+            const addTypeSelect = document.getElementById('transaction-type');
+            const addCategorySelect = document.getElementById('category');
+            addTypeSelect.addEventListener('change', function () {
+                updateCategories(addTypeSelect, addCategorySelect);
+            });
+            updateCategories(addTypeSelect, addCategorySelect);
+    
+            // Initialize categories for edit modal
+            const editTypeSelect = document.getElementById('edit-transaction-type');
+            const editCategorySelect = document.getElementById('edit-category');
+            editTypeSelect.addEventListener('change', function () {
+                updateCategories(editTypeSelect, editCategorySelect);
             });
         });
     </script>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            <div class="alert alert-{{ category }}">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+    {% endwith %}
 </body>
+
 </html>
