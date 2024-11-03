@@ -100,6 +100,16 @@
             padding: 20px;
             box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
         }
+        summary{
+            margin-top: 20px;
+            background-color: #ffffff;
+            border-radius: .5rem;
+            overflow: hidden;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        }
+        sumary:hover{
+            transform: translateY(-5px);
+        }
         .flashes {
             list-style-type: none;
             color: red;
@@ -187,7 +197,6 @@
                     <th scope="col">Danh mục</th>
                     <th scope="col">Số tiền</th>
                     <th scope="col">Ngày</th>
-                    <th scope="col">Mô tả</th>
                 </tr>
             </thead>
             <tbody>
@@ -197,7 +206,6 @@
                     <td>{{ transaction.category }}</td>
                     <td>{{ transaction.amount | vnd_currency }}</td>
                     <td>{{ transaction.date.strftime('%Y-%m-%d') }}</td>
-                    <td>{{ transaction.description }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
