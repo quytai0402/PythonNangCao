@@ -4,10 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hồ sơ cá nhân</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet"/>
     <style>
+        .navbar-nav .nav-link i {
+        margin-right: 8px; /* Add margin to the right of icons */
+    }
         body {
             background: linear-gradient(to right, #e9ecef, #ffffff);
             font-family: 'Arial', sans-serif;
@@ -85,6 +90,10 @@
             transition: transform 0.2s, box-shadow 0.2s;
             background-color: #ffffff;
         }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+        }
         .btn {
             border-radius: 5px;
             transition: background-color 0.3s ease;
@@ -125,23 +134,44 @@
 </head>
 <body>
     <!-- Navbar -->
-    <nav class="navbar navbar-vertical">
-        <ul class="navbar-nav">
-            <li class="navbar-brand"><a href="/dashboard">Quản lý tài chính</a></li>
-            <li class="nav-item"><a class="nav-link" href="/">Xem giao dịch</a></li>
-            <li class="nav-item"><a class="nav-link" href="/report">Báo cáo tài chính</a></li>
-            <li class="nav-item"><a class="nav-link" href="/analysis">Phân tích</a></li>
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Tài khoản
+    <!-- Updated Navbar -->
+<nav class="navbar navbar-vertical">
+    <ul class="navbar-nav">
+        <li class="navbar-brand">
+            <a href="/dashboard">
+                Quản lý tài chính
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/">
+                <i class="fas fa-exchange-alt"></i> Xem giao dịch
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/report">
+                <i class="fas fa-chart-line"></i> Báo cáo tài chính
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/analysis">
+                <i class="fas fa-chart-pie"></i> Phân tích
+            </a>
+        </li>
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-user-circle"></i> Tài khoản
+            </a>
+            <div class="dropdown-menu" aria-labelledby="userDropdown">
+                <a class="dropdown-item" href="/profile">
+                    <i class="fas fa-id-badge"></i> Hồ sơ
                 </a>
-                <div class="dropdown-menu" aria-labelledby="userDropdown">
-                    <a class="dropdown-item" href="/profile">Hồ sơ</a>
-                    <a class="dropdown-item" href="/logout">Đăng xuất</a>
-                </div>
-            </li>
-        </ul>
-    </nav>
+                <a class="dropdown-item" href="/logout">
+                    <i class="fas fa-sign-out-alt"></i> Đăng xuất
+                </a>
+            </div>
+        </li>
+    </ul>
+</nav>
 
     <!-- Content -->
     <div class="container mt-4">
@@ -282,27 +312,28 @@
             });
         
             // Xử lý form đổi mật khẩu
-            $('#changePasswordForm').on('submit', function(e) {
-                e.preventDefault();
-                $.ajax({
-                    url: '/change_password',
-                    type: 'POST',
-                    data: $(this).serialize(),
-                    dataType: 'json',
-                    success: function(response) {
-                        $('#changePasswordModal').modal('hide');
-                        toastr.success(response.message);
-                        $('#changePasswordForm')[0].reset();
-                    },
-                    error: function(xhr) {
-                        if (xhr.responseJSON && xhr.responseJSON.errors) {
-                            toastr.error(xhr.responseJSON.errors.join('<br>'));
-                        } else {
-                            toastr.error('Đã xảy ra lỗi');
-                        }
-                    }
-                });
-            });
+$('#changePasswordForm').on('submit', function(e) {
+    e.preventDefault(); // Ngăn chặn hành vi gửi form mặc định
+    $.ajax({
+        url: '/change_password', // Đường dẫn đến API đổi mật khẩu
+        type: 'POST', // Phương thức POST để gửi dữ liệu
+        data: $(this).serialize(), // Lấy dữ liệu từ form và chuyển đổi thành chuỗi
+        dataType: 'json', // Chỉ định kiểu trả về
+        success: function(response) {
+            $('#changePasswordModal').modal('hide'); // Đóng modal sau khi thành công
+            toastr.success(response.message); // Hiển thị thông báo thành công
+            $('#changePasswordForm')[0].reset(); // Reset lại form
+        },
+        error: function(xhr) {
+            if (xhr.responseJSON && xhr.responseJSON.errors) {
+                toastr.error(xhr.responseJSON.errors.join('<br>')); // Hiển thị lỗi nếu có
+            } else {
+                toastr.error('Đã xảy ra lỗi'); // Thông báo chung nếu không xác định được lỗi
+            }
+        }
+    });
+});
+
         });
         </script>
 </body>
