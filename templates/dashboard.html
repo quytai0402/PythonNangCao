@@ -4,14 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bảng Điều Khiển</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body {
-            background-color: #f8f9fa;
+            background: linear-gradient(to right, #e9ecef, #ffffff);
             font-family: 'Roboto', sans-serif;
-            color: #495057;
+            overflow-x: hidden; /* Ngăn chặn việc cuộn ngang */
         }
         .navbar-brand a {
     color: #fff !important;
@@ -123,25 +125,44 @@
     </style>
 </head>
 <body>
-    <!-- Navbar -->
+    <!-- Updated Navbar -->
     <nav class="navbar navbar-vertical">
         <ul class="navbar-nav">
-            <li class="navbar-brand"><a href="/dashboard">Quản lý tài chính</li>
-            <li class="nav-item"><a class="nav-link" href="/">Xem giao dịch</a></li>
-            <li class="nav-item"><a class="nav-link" href="/report">Báo cáo tài chính</a></li>
-            <li class="nav-item"><a class="nav-link" href="/analysis">Phân tích</a></li>
+            <li class="navbar-brand">
+                <a href="/dashboard">
+                    Quản lý tài chính
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/">
+                    <i class="fas fa-exchange-alt"></i> Xem giao dịch
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/report">
+                    <i class="fas fa-chart-line"></i> Báo cáo tài chính
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/analysis">
+                    <i class="fas fa-chart-pie"></i> Phân tích
+                </a>
+            </li>
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Tài khoản
+                    <i class="fas fa-user-circle"></i> Tài khoản
                 </a>
                 <div class="dropdown-menu" aria-labelledby="userDropdown">
-                    <a class="dropdown-item" href="/profile">Hồ sơ</a>
-                    <a class="dropdown-item" href="/logout">Đăng xuất</a>
+                    <a class="dropdown-item" href="/profile">
+                        <i class="fas fa-id-badge"></i> Hồ sơ
+                    </a>
+                    <a class="dropdown-item" href="/logout">
+                        <i class="fas fa-sign-out-alt"></i> Đăng xuất
+                    </a>
                 </div>
             </li>
         </ul>
-    </div>
-</nav>
+    </nav>
 
     <div class="content">
         <h1>Bảng Điều Khiển Cá Nhân</h1>
