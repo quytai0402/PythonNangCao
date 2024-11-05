@@ -5,87 +5,86 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bảng Điều Khiển</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body {
-            background: linear-gradient(to right, #e9ecef, #ffffff);
+            background-color: #f8f9fa;
             font-family: 'Roboto', sans-serif;
-            overflow-x: hidden; /* Ngăn chặn việc cuộn ngang */
+            color: #495057;
         }
         .navbar-brand a {
-    color: #fff !important;
-    font-size: 1.8rem;
-    font-weight: bold;
-    text-decoration: none;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-    transition: color 0.3s, text-shadow 0.3s;
-}
+            color: #fff !important;
+            font-size: 1.8rem;
+            font-weight: bold;
+            text-decoration: none;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            transition: color 0.3s, text-shadow 0.3s;
+        }
 
-.navbar-brand a:hover {
-    color: #ffcc00 !important;
-    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
-}
+        .navbar-brand a:hover {
+            color: #ffcc00 !important;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+        }
         .navbar-vertical {
-    position: fixed;
-    top: 0; 
-    left: 0;
-    height: 100%;
-    width: 250px;
-    background: linear-gradient(90deg, rgba(255, 0, 150, 1) 0%, rgba(0, 204, 255, 1) 100%);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    padding-top: 10px;
-    border-radius: 0 10px 10px 0; 
-}
+            position: fixed;
+            top: 0; 
+            left: 0;
+            height: 100%;
+            width: 250px;
+            background: linear-gradient(90deg, rgba(255, 0, 150, 1) 0%, rgba(0, 204, 255, 1) 100%);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding-top: 10px;
+            border-radius: 0 10px 10px 0; 
+        }
 
-.navbar-brand {
-    font-weight: bold;
-    color: #fff !important;
-    text-align: center; 
-    margin-bottom: 20px;
-    font-size: 1.5rem;
-}
+        .navbar-brand {
+            font-weight: bold;
+            color: #fff !important;
+            text-align: center; 
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
 
-.navbar-nav {
-    flex-direction: column;
-    width: 100%;
-    padding-left: 0; 
-    padding-top: 0; /* Loại bỏ padding trên */
-    margin-top: 0; /* Loại bỏ margin trên */
-    position: absolute; /* Đặt vị trí tuyệt đối */
-    top: 10px; /* Điều chỉnh khoảng cách từ trên xuống */
-    left: 0; 
-    width: 100%; 
-}
+        .navbar-nav {
+            flex-direction: column;
+            width: 100%;
+            padding-left: 0; 
+            padding-top: 0;
+            margin-top: 0;
+            position: absolute;
+            top: 10px;
+            left: 0; 
+            width: 100%; 
+        }
 
-.navbar-nav .nav-link {
-    color: #fff !important;
-    font-weight: bold;
-    transition: color 0.3s;
-    padding: 10px 20px; 
-    margin-bottom: 10px; 
-    border-radius: 0;
-    background-color: rgba(255, 255, 255, 0.1); 
-    text-align: left; 
-    display: flex;
-    align-items: center; 
-}
+        .navbar-nav .nav-link {
+            color: #fff !important;
+            font-weight: bold;
+            transition: color 0.3s;
+            padding: 10px 20px; 
+            margin-bottom: 10px; 
+            border-radius: 0;
+            background-color: rgba(255, 255, 255, 0.1); 
+            text-align: left; 
+            display: flex;
+            align-items: center; 
+        }
 
-.navbar-nav .nav-link i {
-    margin-right: 10px; 
-}
+        .navbar-nav .nav-link i {
+            margin-right: 10px; 
+        }
 
-.navbar-nav .nav-link:hover {
-    background-color: rgba(255, 255, 255, 0.2); 
-}
+        .navbar-nav .nav-link:hover {
+            background-color: rgba(255, 255, 255, 0.2); 
+        }
 
-.container {
-    margin-left: 250px; 
-    padding: 20px;
-    position: relative; 
-}
+        .container {
+            margin-left: 250px; 
+            padding: 20px;
+            position: relative; 
+        }
         .content {
             margin-left: 270px;
             padding: 20px;
@@ -104,6 +103,8 @@
             color: white;
             border-radius: 15px 15px 0 0;
             font-weight: bold;
+            display: flex;
+            align-items: center;
         }
         h1 {
             text-align: center;
@@ -125,12 +126,12 @@
     </style>
 </head>
 <body>
-    <!-- Updated Navbar -->
+    <!-- Navbar -->
     <nav class="navbar navbar-vertical">
         <ul class="navbar-nav">
             <li class="navbar-brand">
                 <a href="/dashboard">
-                    Quản lý tài chính
+                    <i class="fas fa-wallet mr-2"></i> TỔNG QUAN
                 </a>
             </li>
             <li class="nav-item">
@@ -165,11 +166,16 @@
     </nav>
 
     <div class="content">
-        <h1>Bảng Điều Khiển Cá Nhân</h1>
+        <h1><i class="fas fa-tachometer-alt mr-2"></i>Bảng Điều Khiển Cá Nhân</h1>
 
         <div class="row search-bar">
             <div class="col-md-12">
-                <input class="form-control" id="searchInput" type="text" placeholder="Tìm kiếm giao dịch...">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="fas fa-search"></i></span>
+                    </div>
+                    <input class="form-control" id="searchInput" type="text" placeholder="Tìm kiếm giao dịch...">
+                </div>
             </div>
         </div>
 
@@ -177,7 +183,7 @@
             <div class="col-md-6">
                 <div class="card">
                     <div class="card-header">
-                        Doanh thu theo tháng
+                        <i class="fas fa-chart-bar mr-2"></i> Doanh thu theo tháng
                     </div>
                     <div class="card-body">
                         <canvas id="myChart"></canvas>
@@ -187,7 +193,7 @@
             <div class="col-md-6">
                 <div class="card">
                     <div class="card-header">
-                        Tỷ lệ chi tiêu
+                        <i class="fas fa-pie-chart mr-2"></i> Tỷ lệ chi tiêu
                     </div>
                     <div class="card-body">
                         <canvas id="expenseChart"></canvas>
@@ -200,15 +206,15 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
-                        Tổng quan
+                        <i class="fas fa-chart-area mr-2"></i> Tổng quan
                     </div>
                     <div class="card-body d-flex justify-content-around">
                         <div>
-                            <h5>Tổng doanh thu:</h5>
+                            <h5><i class="fas fa-money-bill-wave mr-2"></i>Tổng doanh thu:</h5>
                             <h4 style="color: #28a745;">{{ total_income | vnd_currency }}</h4>
                         </div>
                         <div>
-                            <h5>Tổng chi tiêu:</h5>
+                            <h5><i class="fas fa-money-bill-wave-alt mr-2"></i>Tổng chi tiêu:</h5>
                             <h4 style="color: #dc3545;">{{ total_expense | vnd_currency }}</h4>
                         </div>
                     </div>
@@ -217,16 +223,16 @@
         </div>
 
         <div class="card">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                Giao dịch gần đây
-                <!-- <a href="/add" class="btn btn-primary">Thêm giao dịch</a> -->
+            <div class="card-header d-flex align-items-center">
+                <i class="fas fa-list-ul mr-2"></i> Giao dịch gần đây
+                <!-- <a href="/add" class="btn btn-primary ml-auto"><i class="fas fa-plus-circle mr-2"></i>Thêm giao dịch</a> -->
             </div>
             <div class="card-body">
                 <table class="table table-bordered table-hover" id="transactionTable">
                     <thead>
                         <tr>
-                            <th>#</th>
-                            <th>Tên giao dịch</th>
+                            <th># </th>
+                            <th>Tên giao dịch </th>
                             <th>Số tiền</th>
                             <th>Ngày</th>
                         </tr>
