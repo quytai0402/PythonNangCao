@@ -140,6 +140,14 @@
         .btn-primary, .btn-secondary {
             border-radius: 50px;
         }
+        /* Additional Icon Styling */
+        .btn-group .btn i {
+            margin-right: 8px;
+        }
+        .table th i {
+            margin-left: 5px;
+            color: #ffc107;
+        }
     </style>
 </head>
 <body>
@@ -150,7 +158,7 @@
     <ul class="navbar-nav">
         <li class="navbar-brand">
             <a href="/dashboard">
-                Quản lý tài chính
+                <i class="fas fa-wallet mr-2"></i> TỔNG QUAN
             </a>
         </li>
         <li class="nav-item">
@@ -186,7 +194,7 @@
 
     <!-- Content -->
     <div class="content">
-        <h2 class="text-center mb-4">Báo cáo tài chính</h2>
+        <h2 class="text-center mb-4"><i class="fas fa-file-alt mr-2"></i>Báo cáo tài chính</h2>
 
         <!-- Hiển thị thông báo -->
         {% with messages = get_flashed_messages(with_categories=true) %}
@@ -202,15 +210,15 @@
         <form method="post">
             <div class="form-row">
                 <div class="col-md-6 mb-3">
-                    <label for="start_date">Từ ngày</label>
+                    <label for="start_date"><i class="fas fa-calendar-check mr-2"></i>Từ ngày</label>
                     <input type="date" name="start_date" id="start_date" value="{{ start_date }}" class="form-control">
                 </div>
                 <div class="col-md-6 mb-3">
-                    <label for="end_date">Đến ngày:</label>
+                    <label for="end_date"><i class="fas fa-calendar-times mr-2"></i>Đến ngày:</label>
                     <input type="date" name="end_date" id="end_date" value="{{ end_date }}" class="form-control">
                 </div>
                 <div class="col-md-12 mb-3 text-right">
-                    <button type="submit" class="btn btn-primary">Lọc</button>
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-filter mr-2"></i>Lọc</button>
                 </div>
             </div>
         </form>
@@ -218,16 +226,16 @@
         <table class="table table-bordered">
             <thead class="thead-light">
                 <tr>
-                    <th scope="col">Loại</th>
-                    <th scope="col">Danh mục</th>
-                    <th scope="col">Số tiền</th>
-                    <th scope="col">Ngày</th>
+                    <th scope="col"><i class="fas fa-tag"></i> Loại</th>
+                    <th scope="col"><i class="fas fa-folder"></i> Danh mục</th>
+                    <th scope="col"><i class="fas fa-dollar-sign"></i> Số tiền</th>
+                    <th scope="col"><i class="fas fa-calendar-alt"></i> Ngày</th>
                 </tr>
             </thead>
             <tbody>
                 {% for transaction in transactions %}
                 <tr>
-                    <td>{{ transaction.type }}</td>
+                    <td><i class="fas {{ 'fa-arrow-down' if transaction.type == 'Chi Tiêu' else 'fa-arrow-up' }} mr-2"></i>{{ transaction.type }}</td>
                     <td>{{ transaction.category }}</td>
                     <td>{{ transaction.amount | vnd_currency }}</td>
                     <td>{{ transaction.date.strftime('%Y-%m-%d') }}</td>
@@ -236,23 +244,23 @@
             </tbody>
         </table>
 
-        <div class="summary">
-            <h3>Tổng thu nhập: <span>{{ total_income | vnd_currency }}</span></h3>
-            <h3>Tổng chi tiêu: <span>{{ total_expense | vnd_currency }}</span></h3>
-            <h3>Số dư: <span>{{ balance | vnd_currency }}</span></h3>
+        <div class="summary text-center">
+            <h3><i class="fas fa-wallet mr-2"></i>Tổng thu nhập: <span>{{ total_income | vnd_currency }}</span></h3>
+            <h3><i class="fas fa-money-bill-wave mr-2"></i>Tổng chi tiêu: <span>{{ total_expense | vnd_currency }}</span></h3>
+            <h3><i class="fas fa-balance-scale mr-2"></i>Số dư: <span>{{ balance | vnd_currency }}</span></h3>
         </div>
 
         <!-- Form Xuất Báo Cáo -->
         {% if show_export_button %}
-        <form method="GET" action="{{ url_for('export_report') }}" id="export-form">
+        <form method="GET" action="{{ url_for('export_report') }}" id="export-form" class="text-center mt-4">
             <input type="hidden" name="start_date" value="{{ start_date }}">
             <input type="hidden" name="end_date" value="{{ end_date }}">
-            <button type="button" id="exportButton" class="btn btn-secondary">Xuất Báo Cáo</button>
+            <button type="button" id="exportButton" class="btn btn-secondary mb-3"><i class="fas fa-file-export mr-2"></i>Xuất Báo Cáo</button>
         </form>
         {% endif %}
 
         <!-- Hiển thị thông báo tải xuống -->
-        <div id="notification"></div>
+        <div id="notification" class="text-center"></div>
 
         <!-- Canvas for Chart.js -->
         <div class="chart-container">
@@ -272,10 +280,10 @@
                             // Tải xuống tệp
                             window.location.href = response.file_url;
                             // Hiển thị thông báo
-                            $('#notification').text(response.message).css('color', 'green');
+                            $('#notification').html('<i class="fas fa-check-circle"></i> ' + response.message).css('color', 'green');
                         },
                         error: function(xhr) {
-                            $('#notification').text(xhr.responseJSON.message).css('color', 'red');
+                            $('#notification').html('<i class="fas fa-times-circle"></i> ' + xhr.responseJSON.message).css('color', 'red');
                         }
                     });
                 });
