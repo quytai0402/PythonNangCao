@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quản lý tài chính cá nhân</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
@@ -329,16 +328,11 @@
                             {{ form.hidden_tag() }}
                             <div class="form-group">
                                 <label for="edit-transaction-type">Loại giao dịch</label>
-                                <select class="form-control" id="edit-transaction-type" name="type">
-                                    <option value="Thu Nhập">Thu Nhập</option>
-                                    <option value="Chi Tiêu">Chi Tiêu</option>
-                                </select>
+                                <input type="text" class="form-control" id="edit-transaction-type" name="type" readonly>
                             </div>
                             <div class="form-group">
                                 <label for="edit-category">Mô Tả</label>
-                                <select class="form-control" id="edit-category" name="category">
-                                    <!-- Các lựa chọn sẽ được cập nhật bằng JavaScript -->
-                                </select>
+                                <input type="text" class="form-control" id="edit-category" name="category" readonly>
                             </div>
                             <div class="form-group">
                                 <label for="edit-amount">Số Tiền</label>
@@ -435,7 +429,7 @@
                     form.querySelector('#edit-amount').value = amount;
                     form.querySelector('#edit-date').value = date;
     
-                    updateCategories(form.querySelector('#edit-transaction-type'), form.querySelector('#edit-category'));
+                    // Removed updateCategories function call since type is not editable
     
                     $('#editModal').modal('show');
                 });
@@ -450,7 +444,7 @@
                     // Thêm độ trễ trước khi tải lại trang
                     setTimeout(function() {
                         location.reload(); 
-                    }, 2500); // Độ trễ 1 giây (1000 milliseconds)
+                    }, 2500); // Độ trễ 2.5 giây
                 }).fail(function (response) {
                     toastr.error('Lỗi: ' + response.responseText);
                 });
@@ -465,7 +459,7 @@
         // Thêm độ trễ trước khi tải lại trang
         setTimeout(function() {
             location.reload(); 
-        }, 2500); // Độ trễ 1 giây (1000 milliseconds)
+        }, 2500); // Độ trễ 2.5 giây
     }).fail(function (response) {
         const errors = response.responseJSON; // Get errors from JSON
         let errorMessages = '';
@@ -486,7 +480,7 @@
         // Thêm độ trễ trước khi tải lại trang
         setTimeout(function() {
             location.reload(); 
-        }, 2500); // Độ trễ 1 giây (1000 milliseconds)
+        }, 2500); // Độ trễ 2.5 giây
     }).fail(function (response) {
         const errors = response.responseJSON; // Get errors from JSON
         let errorMessages = '';
@@ -518,12 +512,7 @@
             });
             updateCategories(addTypeSelect, addCategorySelect);
     
-            // Initialize categories for edit modal
-            const editTypeSelect = document.getElementById('edit-transaction-type');
-            const editCategorySelect = document.getElementById('edit-category');
-            editTypeSelect.addEventListener('change', function () {
-                updateCategories(editTypeSelect, editCategorySelect);
-            });
+            // Removed initialization for edit modal categories since they are not editable
         });
     </script>
     {% with messages = get_flashed_messages(with_categories=true) %}
