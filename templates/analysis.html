@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Phân tích và Dự báo</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
@@ -17,78 +18,77 @@
         }
         
         .navbar-vertical {
-    position: fixed;
-    top: 0; 
-    left: 0;
-    height: 100%;
-    width: 250px;
-    background: linear-gradient(90deg, rgba(255, 0, 150, 1) 0%, rgba(0, 204, 255, 1) 100%);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    padding-top: 10px;
-    border-radius: 0 10px 10px 0; 
-}
+            position: fixed;
+            top: 0; 
+            left: 0;
+            height: 100%;
+            width: 250px;
+            background: linear-gradient(90deg, rgba(255, 0, 150, 1) 0%, rgba(0, 204, 255, 1) 100%);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding-top: 10px;
+            border-radius: 0 10px 10px 0; 
+        }
 
-.navbar-brand {
-    font-weight: bold;
-    color: #fff !important;
-    text-align: center; 
-    margin-bottom: 20px;
-    font-size: 1.5rem;
-}
+        .navbar-brand {
+            font-weight: bold;
+            color: #fff !important;
+            text-align: center; 
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
 
-.navbar-nav {
-    flex-direction: column;
-    width: 100%;
-    padding-left: 0; 
-    padding-top: 0; /* Loại bỏ padding trên */
-    margin-top: 0; /* Loại bỏ margin trên */
-    position: absolute; /* Đặt vị trí tuyệt đối */
-    top: 10px; /* Điều chỉnh khoảng cách từ trên xuống */
-    left: 0; 
-    width: 100%; 
-}
+        .navbar-nav {
+            flex-direction: column;
+            width: 100%;
+            padding-left: 0; 
+            padding-top: 0; /* Loại bỏ padding trên */
+            margin-top: 0; /* Loại bỏ margin trên */
+            position: absolute; /* Đặt vị trí tuyệt đối */
+            top: 10px; /* Điều chỉnh khoảng cách từ trên xuống */
+            left: 0;
+            width: 100%;
+        }
 
-.navbar-nav .nav-link {
-    color: #fff !important;
-    font-weight: bold;
-    transition: color 0.3s;
-    padding: 10px 20px; 
-    margin-bottom: 10px; 
-    border-radius: 0;
-    background-color: rgba(255, 255, 255, 0.1); 
-    text-align: left; 
-    display: flex;
-    align-items: center; 
-}
+        .navbar-nav .nav-link {
+            color: #fff !important;
+            font-weight: bold;
+            transition: color 0.3s;
+            padding: 10px 20px; 
+            margin-bottom: 10px; 
+            border-radius: 0;
+            background-color: rgba(255, 255, 255, 0.1); 
+            text-align: left; 
+            display: flex;
+            align-items: center; 
+        }
 
-.navbar-nav .nav-link i {
-    margin-right: 10px; 
-}
+        .navbar-nav .nav-link i {
+            margin-right: 10px;
+        }
 
-.navbar-nav .nav-link:hover {
-    background-color: rgba(255, 255, 255, 0.2); 
-}
+        .navbar-nav .nav-link:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
 
-.container {
-    margin-left: 250px; /* Giữ khoảng cách với navbar */
-    padding: 20px;
-    position: relative;
-    max-width: 1200px; /* Tăng độ rộng tối đa từ 800px lên 1200px */
-    margin-right: auto;
-    margin-left: 270px; /* Điều chỉnh khoảng cách trái để tránh navbar */
-    width: calc(100% - 290px); /* Đảm bảo container không bị tràn */
-}
+        .container {
+            margin-left: 250px; /* Giữ khoảng cách với navbar */
+            padding: 20px;
+            position: relative;
+            max-width: 1200px; /* Tăng độ rộng tối đa từ 800px lên 1200px */
+            margin-right: auto;
+            margin-left: 270px; /* Điều chỉnh khoảng cách trái để tránh navbar */
+            width: calc(100% - 290px); /* Đảm bảo container không bị tràn */
+        }
 
-/* Thêm responsive cho màn hình nhỏ */
-@media (max-width: 768px) {
-    .container {
-        margin-left: auto;
-        margin-right: auto;
-        width: 95%;
-        padding: 15px;
-    }
-}
-
+        /* Thêm responsive cho màn hình nhỏ */
+        @media (max-width: 768px) {
+            .container {
+                margin-left: auto;
+                margin-right: auto;
+                width: 95%;
+                padding: 15px;
+            }
+        }
         
         h1, h2 {
             color: #343a40;
@@ -130,6 +130,11 @@
         .card {
             margin-bottom: 20px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+            border-radius: 15px;
+            transition: transform 0.2s;
+        }
+        .card:hover {
+            transform: translateY(-5px);
         }
 
         footer {
@@ -148,50 +153,77 @@
             color: #6c757d;
         }
         .navbar-brand a {
-    color: #fff !important;
-    font-size: 1.8rem;
-    font-weight: bold;
-    text-decoration: none;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-    transition: color 0.3s, text-shadow 0.3s;
-}
+            color: #fff !important;
+            font-size: 1.8rem;
+            font-weight: bold;
+            text-decoration: none;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            transition: color 0.3s, text-shadow 0.3s;
+        }
 
-.navbar-brand a:hover {
-    color: #ffcc00 !important;
-    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
-}
+        .navbar-brand a:hover {
+            color: #ffcc00 !important;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+        }
+        /* Additional Icon Styling */
+        .btn-group .btn i {
+            margin-right: 8px;
+        }
+        .table th i {
+            margin-left: 5px;
+            color: #ffc107;
+        }
     </style>
 </head>
 <body>
     <!-- Navbar -->
     <nav class="navbar navbar-vertical">
-            <ul class="navbar-nav">
-                <li class="navbar-brand"><a href="/dashboard">Quản lý tài chính</li>
-                <li class="nav-item"><a class="nav-link" href="/">Xem giao dịch</a></li>
-                <li class="nav-item"><a class="nav-link" href="/report">Báo cáo tài chính</a></li>
-                <li class="nav-item"><a class="nav-link" href="/analysis">Phân tích</a></li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Tài khoản
+        <ul class="navbar-nav">
+            <li class="navbar-brand">
+                <a href="/dashboard">
+                    <i class="fas fa-wallet mr-2"></i> TỔNG QUAN
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/">
+                    <i class="fas fa-exchange-alt"></i> Xem giao dịch
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/report">
+                    <i class="fas fa-chart-line"></i> Báo cáo tài chính
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/analysis">
+                    <i class="fas fa-chart-pie"></i> Phân tích
+                </a>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fas fa-user-circle"></i> Tài khoản
+                </a>
+                <div class="dropdown-menu" aria-labelledby="userDropdown">
+                    <a class="dropdown-item" href="/profile">
+                        <i class="fas fa-id-badge"></i> Hồ sơ
                     </a>
-                    <div class="dropdown-menu" aria-labelledby="userDropdown">
-                        <a class="dropdown-item" href="/profile">Hồ sơ</a>
-                        <a class="dropdown-item" href="/logout">Đăng xuất</a>
-                    </div>
-                </li>
-            </ul>
-        </div>
+                    <a class="dropdown-item" href="/logout">
+                        <i class="fas fa-sign-out-alt"></i> Đăng xuất
+                    </a>
+                </div>
+            </li>
+        </ul>
     </nav>
 
     <div class="container mt-4">
-        <h1 class="text-center mb-4">Phân tích Chi Tiêu và Thu Nhập hàng tháng</h1>
+        <h1 class="text-center mb-4"><i class="fas fa-chart-line mr-2"></i>Phân tích Chi Tiêu và Thu Nhập hàng tháng</h1>
         
         <div class="help-text text-center">
-            Chọn tháng để xem phân tích chi tiêu và thu nhập.
+            <i class="fas fa-info-circle mr-2"></i>Chọn tháng để xem phân tích chi tiêu và thu nhập.
         </div>
 
         <div class="form-group">
-            <label for="monthSelect">Chọn tháng:</label>
+            <label for="monthSelect"><i class="fas fa-calendar-alt mr-2"></i>Chọn tháng:</label>
             <select id="monthSelect" class="form-control">
                 <option value="">Tất cả</option>
                 {% for month in range(1, 13) %}
@@ -209,15 +241,15 @@
         {% else %}
             <div class="card">
                 <div class="card-body">
-                    <h2 class="mt-4">Kết quả phân tích Thu Nhập</h2>
+                    <h2 class="mt-4"><i class="fas fa-money-bill-wave mr-2"></i>Kết quả phân tích Thu Nhập</h2>
                     <table class="table table-bordered analysis-table">
                         <thead>
                             <tr>
-                                <th>Tháng</th>
-                                <th>Tổng Thu Nhập</th>
-                                <th>Thu Nhập Trung Bình</th>
-                                <th>Thu Nhập Cao Nhất</th>
-                                <th>Thu Nhập Thấp Nhất</th>
+                                <th><i class="fas fa-calendar-day"></i> Tháng</th>
+                                <th><i class="fas fa-dollar-sign"></i> Tổng Thu Nhập</th>
+                                <th><i class="fas fa-chart-bar"></i> Thu Nhập Trung Bình</th>
+                                <th><i class="fas fa-chart-line"></i> Thu Nhập Cao Nhất</th>
+                                <th><i class="fas fa-chart-pie"></i> Thu Nhập Thấp Nhất</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -237,15 +269,15 @@
 
             <div class="card">
                 <div class="card-body">
-                    <h2 class="mt-4">Kết quả phân tích Chi Tiêu</h2>
+                    <h2 class="mt-4"><i class="fas fa-money-bill-wave-alt mr-2"></i>Kết quả phân tích Chi Tiêu</h2>
                     <table class="table table-bordered analysis-table">
                         <thead>
                             <tr>
-                                <th>Tháng</th>
-                                <th>Tổng Chi Tiêu</th>
-                                <th>Chi Tiêu Trung Bình</th>
-                                <th>Chi Tiêu Cao Nhất</th>
-                                <th>Chi Tiêu Thấp Nhất</th>
+                                <th><i class="fas fa-calendar-day"></i> Tháng</th>
+                                <th><i class="fas fa-dollar-sign"></i> Tổng Chi Tiêu</th>
+                                <th><i class="fas fa-chart-bar"></i> Chi Tiêu Trung Bình</th>
+                                <th><i class="fas fa-chart-line"></i> Chi Tiêu Cao Nhất</th>
+                                <th><i class="fas fa-chart-pie"></i> Chi Tiêu Thấp Nhất</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -264,9 +296,7 @@
             </div>
         {% endif %}
     </div>
-
   
-
     <script>
         document.getElementById('monthSelect').addEventListener('change', function() {
             const selectedMonth = this.value;
