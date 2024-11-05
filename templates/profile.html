@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hồ sơ cá nhân</title>
+    <title>Hồ Sơ Cá Nhân</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
@@ -11,8 +11,8 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet"/>
     <style>
         .navbar-nav .nav-link i {
-        margin-right: 8px; /* Add margin to the right of icons */
-    }
+            margin-right: 8px; /* Add margin to the right of icons */
+        }
         body {
             background: linear-gradient(to right, #e9ecef, #ffffff);
             font-family: 'Arial', sans-serif;
@@ -72,11 +72,11 @@
             align-items: center; 
         }
         .container {
-    margin-left: 270px;
-    padding: 30px;
-    max-width: 1200px;
-    width: calc(100% - 290px);
-}
+            margin-left: 270px;
+            padding: 30px;
+            max-width: 1200px;
+            width: calc(100% - 290px);
+        }
         h1 {
             color: #212529;
             margin-bottom: 30px;
@@ -121,68 +121,72 @@
         }
         
         .action-buttons {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 20px;
-}
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
 
-.action-buttons .btn {
-    flex: 1;
-    margin: 0 5px;
-}
+        .action-buttons .btn {
+            flex: 1;
+            margin: 0 5px;
+        }
+
+        .action-buttons .btn i {
+            margin-right: 8px;
+        }
     </style>
 </head>
 <body>
     <!-- Navbar -->
     <!-- Updated Navbar -->
-<nav class="navbar navbar-vertical">
-    <ul class="navbar-nav">
-        <li class="navbar-brand">
-            <a href="/dashboard">
-                Quản lý tài chính
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="/">
-                <i class="fas fa-exchange-alt"></i> Xem giao dịch
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="/report">
-                <i class="fas fa-chart-line"></i> Báo cáo tài chính
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="/analysis">
-                <i class="fas fa-chart-pie"></i> Phân tích
-            </a>
-        </li>
-        <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <i class="fas fa-user-circle"></i> Tài khoản
-            </a>
-            <div class="dropdown-menu" aria-labelledby="userDropdown">
-                <a class="dropdown-item" href="/profile">
-                    <i class="fas fa-id-badge"></i> Hồ sơ
+    <nav class="navbar navbar-vertical">
+        <ul class="navbar-nav">
+            <li class="navbar-brand">
+                <a href="/dashboard">
+                    <i class="fas fa-wallet mr-2"></i> TỔNG QUAN
                 </a>
-                <a class="dropdown-item" href="/logout">
-                    <i class="fas fa-sign-out-alt"></i> Đăng xuất
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/">
+                    <i class="fas fa-exchange-alt"></i> Xem Giao Dịch
                 </a>
-            </div>
-        </li>
-    </ul>
-</nav>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/report">
+                    <i class="fas fa-chart-line"></i> Báo Cáo Tài Chính
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/analysis">
+                    <i class="fas fa-chart-pie"></i> Phân Tích Tài Chính
+                </a>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fas fa-user-circle"></i> Tài Khoản
+                </a>
+                <div class="dropdown-menu" aria-labelledby="userDropdown">
+                    <a class="dropdown-item" href="/profile">
+                        <i class="fas fa-id-badge"></i> Hồ Sơ
+                    </a>
+                    <a class="dropdown-item" href="/logout">
+                        <i class="fas fa-sign-out-alt"></i> Đăng Xuất
+                    </a>
+                </div>
+            </li>
+        </ul>
+    </nav>
 
     <!-- Content -->
     <div class="container mt-4">
-        <h1 class="text-center">Hồ sơ cá nhân</h1>
+        <h1 class="text-center"><i class="fas fa-user"></i> Hồ Sơ Cá Nhân</h1>
 
         <!-- Hiển thị thông báo flash -->
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 {% for category, message in messages %}
                     <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
-                        {{ message }}
+                        <i class="fas fa-info-circle"></i> {{ message }}
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -196,13 +200,13 @@
                 <img src="https://hoanghamobile.com/tin-tuc/wp-content/webp-express/webp-images/uploads/2024/04/anh-con-cho-4.jpg.webp" alt="Avatar" class="user-photo rounded-circle" style="width: 150px; height: 150px;">
             </div>
             <div class="card-body">
-                <h5 class="card-title">Tên đăng nhập: <strong>{{ user.username }}</strong></h5>
-                <p class="card-text">Họ và Tên: <strong>{{ user.first_name }} {{ user.last_name }}</strong></p>
-                <p class="card-text">ID người dùng: <strong>{{ user.id }}</strong></p>
-                <p class="card-text">Email: <strong>{{ user.email }}</strong></p>
+                <h5 class="card-title"><i class="fas fa-id-badge"></i> Tên Đăng Nhập : <strong>{{ user.username }}</strong></h5>
+                <p class="card-text"><i class="fas fa-user"></i> Họ và Tên: <strong>{{ user.first_name }} {{ user.last_name }}</strong></p>
+                <p class="card-text"><i class="fas fa-user-tag"></i> ID Người Dùng : <strong>{{ user.id }}</strong></p>
+                <p class="card-text"><i class="fas fa-envelope"></i> Email: <strong>{{ user.email }}</strong></p>
                 <div class="action-buttons">
-                    <button class="btn btn-success" data-toggle="modal" data-target="#editProfileModal">Chỉnh sửa hồ sơ</button>
-                    <button class="btn btn-primary" data-toggle="modal" data-target="#changePasswordModal">Đổi mật khẩu</button>
+                    <button class="btn btn-success" data-toggle="modal" data-target="#editProfileModal"><i class="fas fa-edit"></i> Chỉnh Sửa Hồ Sơ</button>
+                    <button class="btn btn-primary" data-toggle="modal" data-target="#changePasswordModal"><i class="fas fa-key"></i> Đổi Mật Khẩu</button>
                 </div>
             </div>
         </div>
@@ -213,7 +217,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="editProfileModalLabel">Chỉnh sửa hồ sơ</h5>
+                    <h5 class="modal-title"><i class="fas fa-edit"></i> Chỉnh sửa hồ sơ</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -233,7 +237,7 @@
                             {{ edit_profile_form.email.label(class="form-label") }}
                             {{ edit_profile_form.email(class="form-control") }}
                         </div>
-                        <button type="submit" class="btn btn-primary">Cập nhật hồ sơ</button>
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Cập nhật hồ sơ</button>
                     </form>
                 </div>
             </div>
@@ -245,7 +249,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="changePasswordModalLabel">Đổi mật khẩu</h5>
+                    <h5 class="modal-title"><i class="fas fa-key"></i> Đổi mật khẩu</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -265,7 +269,7 @@
                             {{ change_password_form.confirm_new_password.label(class="form-label") }}
                             {{ change_password_form.confirm_new_password(class="form-control") }}
                         </div>
-                        <button type="submit" class="btn btn-primary">Đổi mật khẩu</button>
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-sync-alt"></i> Đổi mật khẩu</button>
                     </form>
                 </div>
             </div>
@@ -312,29 +316,28 @@
             });
         
             // Xử lý form đổi mật khẩu
-$('#changePasswordForm').on('submit', function(e) {
-    e.preventDefault(); // Ngăn chặn hành vi gửi form mặc định
-    $.ajax({
-        url: '/change_password', // Đường dẫn đến API đổi mật khẩu
-        type: 'POST', // Phương thức POST để gửi dữ liệu
-        data: $(this).serialize(), // Lấy dữ liệu từ form và chuyển đổi thành chuỗi
-        dataType: 'json', // Chỉ định kiểu trả về
-        success: function(response) {
-            $('#changePasswordModal').modal('hide'); // Đóng modal sau khi thành công
-            toastr.success(response.message); // Hiển thị thông báo thành công
-            $('#changePasswordForm')[0].reset(); // Reset lại form
-        },
-        error: function(xhr) {
-            if (xhr.responseJSON && xhr.responseJSON.errors) {
-                toastr.error(xhr.responseJSON.errors.join('<br>')); // Hiển thị lỗi nếu có
-            } else {
-                toastr.error('Đã xảy ra lỗi'); // Thông báo chung nếu không xác định được lỗi
-            }
-        }
-    });
-});
-
+            $('#changePasswordForm').on('submit', function(e) {
+                e.preventDefault(); // Ngăn chặn hành vi gửi form mặc định
+                $.ajax({
+                    url: '/change_password', // Đường dẫn đến API đổi mật khẩu
+                    type: 'POST', // Phương thức POST để gửi dữ liệu
+                    data: $(this).serialize(), // Lấy dữ liệu từ form và chuyển đổi thành chuỗi
+                    dataType: 'json', // Chỉ định kiểu trả về
+                    success: function(response) {
+                        $('#changePasswordModal').modal('hide'); // Đóng modal sau khi thành công
+                        toastr.success(response.message); // Hiển thị thông báo thành công
+                        $('#changePasswordForm')[0].reset(); // Reset lại form
+                    },
+                    error: function(xhr) {
+                        if (xhr.responseJSON && xhr.responseJSON.errors) {
+                            toastr.error(xhr.responseJSON.errors.join('<br>')); // Hiển thị lỗi nếu có
+                        } else {
+                            toastr.error('Đã xảy ra lỗi'); // Thông báo chung nếu không xác định được lỗi
+                        }
+                    }
+                });
+            });
         });
-        </script>
+    </script>
 </body>
 </html>
