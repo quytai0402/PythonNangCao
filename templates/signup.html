@@ -106,14 +106,17 @@
             <div class="form-group">
                 {{ form.username.label(class="form-label") }}
                 {{ form.username(class="form-control") }}
+                <div class="invalid-feedback" id="username_error">Tên người dùng chỉ được chứa các chữ cái, số, và dấu gạch dưới.</div>
             </div>
             <div class="form-group">
                 {{ form.password.label(class="form-label") }}
                 {{ form.password(class="form-control") }}
+                <div class="invalid-feedback" id="password_error">Mật khẩu phải có ít nhất 6 ký tự.</div>
             </div>
             <div class="form-group">
                 {{ form.confirm_password.label(class="form-label") }}
                 {{ form.confirm_password(class="form-control") }}
+                <div class="invalid-feedback" id="confirm_password_error">Mật khẩu xác nhận không khớp.</div>
             </div>
             <button type="submit" class="btn btn-primary">Đăng ký</button>
         </form>
@@ -134,7 +137,7 @@
             // Validate first name
             const firstName = document.querySelector('input[name="first_name"]');
             const firstNameError = document.getElementById('first_name_error');
-            if (!/^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểễệỉịọỏốồổỗộớờởỡỢụủứừửữựỳỵỷỹ\s]+$/.test(firstName.value.trim())) {
+            if (!/^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểễệỉịọỏốồổỗộớờởỡợụủứừửữựỳỵỷỹ\s]+$/.test(firstName.value.trim())) {
                 firstName.classList.add('is-invalid');
                 firstNameError.style.display = 'block';
                 isValid = false;
@@ -165,6 +168,42 @@
             } else {
                 email.classList.remove('is-invalid');
                 emailError.style.display = 'none';
+            }
+
+            // Validate username
+            const username = document.querySelector('input[name="username"]');
+            const usernameError = document.getElementById('username_error');
+            if (!/^[a-zA-Z0-9_]+$/.test(username.value.trim())) {
+                username.classList.add('is-invalid');
+                usernameError.style.display = 'block';
+                isValid = false;
+            } else {
+                username.classList.remove('is-invalid');
+                usernameError.style.display = 'none';
+            }
+
+            // Validate password
+            const password = document.querySelector('input[name="password"]');
+            const passwordError = document.getElementById('password_error');
+            if (password.value.length < 6) {
+                password.classList.add('is-invalid');
+                passwordError.style.display = 'block';
+                isValid = false;
+            } else {
+                password.classList.remove('is-invalid');
+                passwordError.style.display = 'none';
+            }
+
+            // Validate confirm password
+            const confirmPassword = document.querySelector('input[name="confirm_password"]');
+            const confirmPasswordError = document.getElementById('confirm_password_error');
+            if (confirmPassword.value !== password.value) {
+                confirmPassword.classList.add('is-invalid');
+                confirmPasswordError.style.display = 'block';
+                isValid = false;
+            } else {
+                confirmPassword.classList.remove('is-invalid');
+                confirmPasswordError.style.display = 'none';
             }
 
             return isValid;
