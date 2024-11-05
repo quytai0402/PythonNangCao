@@ -2,6 +2,7 @@ from flask import send_from_directory
 import os  # Thư viện để làm việc với hệ thống tập tin và môi trường
 import pandas as pd  # Thư viện xử lý dữ liệu
 IntegrityError = None
+from sqlalchemy.exc import IntegrityError  # Nhập IntegrityError từ sqlalchemy
 import numpy as np  # Thư viện toán học
 from flask import Flask, render_template, request, redirect, url_for, flash, make_response, jsonify, send_file  # Các chức năng của Flask
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user  # Quản lý đăng nhập
