@@ -30,8 +30,11 @@ if not os.environ.get('SECRET_KEY'):  # Kiểm tra xem khóa bí mật có tồn
 
 app = Flask(__name__)  # Khởi tạo ứng dụng Flask
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')  # Cấu hình khóa bí mật
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://user:password@db:5432/finance_db' # (Chạy trên docker)
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///dangnhap.db'  (Chạy demo trên máy cá nhân)
+# Sử dụng DATABASE_URL từ biến môi trường nếu có, nếu không thì sử dụng chuỗi kết nối Docker
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'postgresql://user:password@db:5432/finance_db')
+# Sửa DATABASE_URL nếu bắt đầu bằng "postgres://" (cho Render)
+if app.config['SQLALCHEMY_DATABASE_URI'].startswith('postgres://'):
+    app.config['SQLALCHEMY_DATABASE_URI'] = app.config['SQLALCHEMY_DATABASE_URI'].replace('postgres://', 'postgresql://', 1)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # Không theo dõi thay đổi trên cơ sở dữ liệu
 migrate = Migrate(app, db)  # Khởi tạo migrate với ứng dụng và cơ sở dữ liệu
 db.init_app(app)  # Khởi tạo cơ sở dữ liệu với ứng dụng Flask
