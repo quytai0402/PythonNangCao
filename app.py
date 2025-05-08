@@ -506,6 +506,8 @@ def change_password():
         return jsonify({'errors': errors}), 400
 
 if __name__ == '__main__':
-    with app.app_context():
-        db.create_all()  # Tạo bảng nếu chúng không tồn tại
-    app.run(host='0.0.0.0')  # Chạy ứng dụng Flask với chế độ debug
+    app.run(host='0.0.0.0')
+
+# Thêm code này để tự động tạo bảng khi ứng dụng khởi động
+with app.app_context():
+    db.create_all()
